@@ -23,7 +23,7 @@ W = \begin{bmatrix}w_0\\w_1\\{\vdots}\\w_n\end{bmatrix} X = \begin{bmatrix}1\\x_
 $$
 
 $$
-  h_{w}(X)=\sum_{i=0}^{n}w_ix_i = W^TX
+h_{w}(X)=\sum_{i=0}^{n}w_ix_i = W^TX
 $$
 
   
@@ -235,3 +235,4 @@ $$
 2. http://www.fuzihao.org/blog/2014/06/13/为什么最小二乘法对误差的估计要用平方/
 3. 程序员的数学-概率统计
 4. https://blog.csdn.net/huruzun/article/details/41493063
+5. https://blog.csdn.net/lizhe_dashuju/article/details/49864569
