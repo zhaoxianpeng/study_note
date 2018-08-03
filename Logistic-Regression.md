@@ -54,6 +54,7 @@ sigmoid函数有如下性质
 
 
 
+
 ### 伯努力分布
 
 那么,为什么sigmoid可以用到logistic回归问题上呢?
@@ -156,120 +157,6 @@ $$
 l(\theta) =log L(\theta) = \sum_{i=1}^m[y^ilogh_\theta(x^i) + (1-y^i)log(1-h_\theta(x^i))]
 $$
 然后求$\theta$使$l(\theta)$的值最大,即为极大似然估计；具体求解方法可用梯度下降,拟牛顿法来求最优值.
-
-### 最大熵
-
-#### 熵的定义
-
-熵表示随机变量不确定性的度量. 设X是一个有限个值的离散随机变量,其概率分布为
-$$
-P(X=x_i) = p_i, i=1,2, \cdots, n
-$$
-则随机变量X的熵定义为
-$$
-H(X)=-\sum_{i=1}^np_ilogp_i
-$$
-熵越大不确定性越大,并且熵的取值范围为
-$$
-0 \leqslant H(p) \leqslant logn
-$$
-
-#### 条件熵
-
-设又随机变量（X，Y），其联合概率分布为
-$$
-P(X=x_i, Y=y_j) = P_{ij}, i=1,2,\cdots,n; j=1,2,\cdots,m
-$$
-条件熵H（Y|X）表示在已知随机变量X的条件下随机变量Y的不确定性，定义为X给定条件下Y的条件概率分布的熵对X的数学期望
-$$
-H(Y|X) = \sum_{i=1}^np_iH(Y|X=x_i) \\
-这里，p_i=P(X=x_i),i=1,2,\cdots,n
-$$
-
-#### 最大熵原理
-
-学习概率模型时,在所有可能的概率模型中,熵最大的模型是最好的模型.
-
-#### 最大熵模型
-
-假设分类模型是一个条件概率分布P（Y|X）， $X\in \chi \subseteq R^n$ 表示输入，$Y \in y$表示输出，这个模型表示的是对于给定的输入X，以条件概率P（Y|X）输出Y。
-
-对于给定训练数据，可以确定联合概率分布P（X，Y）的经验分布和边缘分布P（X）的经验分布：
-$$
-\tilde{P}(X=x,Y=y) = \frac{v(X=x, Y=y)}{N} \\
-\tilde{P}(X=x) = \frac{v(X=x)}{N} \\
-其中，v(X=x,Y=y)表示训练样本中（x，y）出现的频数，v（X=x）表示训练样本中输入x出现的频数，N表示训练样本容量。
-$$
-用特征函数f（x，y）描述输入x与输出y之间的某一事实，其定义为
-$$
-f(x,y) = 
-\begin{cases}
-1, x与y满足某一事实 \\
-0, 否则
-\end{cases} \\
-二值函数，当x和y满足这个事实时取1，否则取0.
-$$
-特征函数f（x，y）关于经验分布$\tilde{P}(X,Y)$的期望值为
-$$
-E_{\tilde{P}}(f) = \sum_{x,y}\tilde{P}(x,y)f(x,y)
-$$
-特征函数f（x，y）关于模型P（Y|X）与经验分布$\tilde{P}(X)$的期望值为
-$$
-E_P(f) = \sum_{x,y}\tilde{P}(x)P(y|x)f(x,y)
-$$
-如果模型能够获取训练数据中的信息，那么就可以假设这两个期望值相等，即
-$$
-E_P(f) = E_{\tilde{P}}(f) \\
-即 \\
-\sum_{x,y}\tilde{P}(x)P(y|x)f(x,y) = \sum_{x,y}\tilde{P}(x,y)f(x,y)
-$$
-我们将上式作为模型学习的约束条件，假设有n个特征函数$f_i(x,y), i=1,2,\cdots, n$，那么就有n个约束条件。
-
-得出，所有满足约束条件的模型集合为
-$$
-C = \{P | E_P(f_i) = E_{\tilde{P}}(f_i), i=1,2,\cdots,n\}
-$$
-定义在条件概率分布P（Y|X）上的条件熵为
-$$
-H(P) = -\sum_{x,y}\tilde{P}(x)P(y|x)logP(y|x)
-$$
-模型集合C中条件熵H（P）最大的模型称为最大熵模型。
-
-#### 最大熵模型学习
-
-最大熵模型学习可以形式化为约束最优化问题。
-
-对于给定的训练数据集$T=\{(x_1,y_1), (x_2,y_2), \cdots, (x_N, y_N) \}$以及特征函数$f_i(x,y), i=1,2,\cdots,n$，最大熵模型的学习等价于约束最优化问题：
-$$
-\begin{align}
-\underset{P\in C}{max} \text{ }   & H(P) = -\sum_{x,y}\tilde{P}(x)P(y|x)logP(y|x) \\
-s.t. \text{    }&E_P(f_i) = E_{\tilde{P}}(f_i), i=1,2,\cdots,n \\
-& \sum_yP(y|x) = 1
-\end{align}
-$$
-按照最优化问题的习惯，将求最大值的问题改成等价的球最小值问题：
-$$
-\begin{align}
-\underset{P\in C}{min} \text{ }   & -H(P) = \sum_{x,y}\tilde{P}(x)P(y|x)logP(y|x) \\
-s.t. \text{    }&E_P(f_i) - E_{\tilde{P}}(f_i) =0, i=1,2,\cdots,n \\
-& 1-  \sum_yP(y|x) = 0
-\end{align}
-$$
-求解上式约束最优化问题所得出的解，就是最大熵模型学习的解。求解过程如下：
-
-将约束最优化的原始问题转化为无约束最优化的对偶问题。
-
-首先引入拉格朗日乘子$w_0, w_1, \cdots,w_n$,定义拉格朗日函数L（P，w）：
-$$
-\begin{align}
-L(P,w) & \equiv-H(P) + w_0(1-\sum_yP(y|x)) + \sum_{i=1}^nw_i(E_P(f_i) - E_{\tilde{P}}(f_i)) \\
-& =
-\end{align}
-$$
-
-
-
-
 
 
 ### 构造损失函数
