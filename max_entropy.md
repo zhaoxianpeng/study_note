@@ -238,7 +238,8 @@ $$
 & = \sum_{x \in X, y \in Y} \tilde{P}(x)P_w(y|x)logP(y|x)\\
 & + w_0(1-\sum_{y \in Y}P_w(y|x))        \text{ 注：因为P_w求解时用到了}\sum_yP(y|x) = 1\text{，此项恒等于0} \\   
 & + \sum_{i=1}^nw_i\left(\sum_{x \in X,y \in Y}\tilde{P}(x,y)f_i(x,y) - \sum_{x \in X,y \in Y}\tilde{P}(x)P_w(y|x)f_i(x,y)\right) \\
-& = \sum_{x \in X, y \in Y} \tilde{P}(x)P_w(y|x)logP_w(y|x) + \sum_{i=1}^nw_i\sum_{x \in X, y \in Y}\tilde{P}(x,y)f_i(x,y) - \sum_{i=1}^nw_i\sum_{x \in X, y\in Y}\tilde{P}(x)P_w(y|x)f_i(x,y) \\
+& = \sum_{x \in X, y \in Y} \tilde{P}(x)P_w(y|x)logP_w(y|x) \\
+& + \sum_{i=1}^nw_i\sum_{x \in X, y \in Y}\tilde{P}(x,y)f_i(x,y) - \sum_{i=1}^nw_i\sum_{x \in X, y\in Y}\tilde{P}(x)P_w(y|x)f_i(x,y) \\
 & = \sum_{i=1}^nw_i\sum_{x \in X, y \in Y}\tilde{P}(x,y)f_i(x,y) + \sum_{x\in X, y \in Y}\tilde{P}(x)P_w(y|x)\left(logP_w(y|x) - \sum_{i=1}^nw_if_i(x,y)\right)
 \end{align}
 $$
