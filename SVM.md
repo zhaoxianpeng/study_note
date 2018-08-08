@@ -183,6 +183,21 @@ $$
 
 在强对偶性成立时,将拉格朗日函数分别对原变量和对偶变量求导,再令导数等于0,即可得到原变量与对偶变量的数值关系.于是对偶问题解决了,主问题也就解决了.
 
+##### 定理
+
+对主问题和对偶问题，假设满足上述强对偶性条件；则$x^*和\lambda^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \lambda^*,\mu^*$满足下面的KKT条件
+$$
+\begin{align}
+& \triangledown_xL(x^*, \lambda^*,\mu^*) = 0 \\
+& \triangledown_\lambda L(x^*, \lambda^*,\mu^*) = 0 \\
+& \triangledown_\mu L(x^*, \lambda^*,\mu^*) = 0 \\
+& g_j(x) <=0, j=(1,2,\cdots,n) \\
+& \mu_j >= 0, j=(1,2,\cdots,n)\\
+& \mu_j g_j(x) = 0,j=(1,2,\cdots,n) \\
+& h_i(x) =0, (i=1,2,\cdots,m) \\
+\end{align}
+$$
+
 #### 优化方法
 
 ##### 二次规划(Quadratic Programming, QP)
@@ -199,7 +214,7 @@ $$
 s.t. \\
 1-y_i(w^Tx_i+b) <= 0, i=1,2,\cdots, N
 $$
-构造拉格朗日函数$\lambda=(\lambda_1,\cdots,\lambda_N)^T$，由于这里是不等式约束，有KKT条件：
+构造拉格朗日函数$\lambda=(\lambda_1,\cdots,\lambda_N)^T$：
 $$
 L(w,b,\lambda) = \frac{1}{2}\left|\left|w\right|\right|^2 + \sum_{i=1}^N\lambda_i(1-y_i(w^Tx_i+b)) \\
 s.t. \\
@@ -267,15 +282,47 @@ $$
    {2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\lambda_i \\ 
    s.t. \\
    \sum_{i=1}^N\lambda_iy_i = 0 \\
-   \lambda_i >=0, i=1,2,\cdots,N
+   \lambda_i >=0, i=1,2,\cdots,N \\
    $$
    由于原始问题满足强对偶条件，所以存在$w^*,b^*,\lambda^*$,使$w^*,b^*$为原始问题的最优解，$\lambda^*$为对偶问题的解，意味着求解原始问题，可以转化为求解对偶问题。
 
 ### 引出核函数
 
-对线性可分数据集，假设对偶问题的解为$\lambda^*=(\lambda_1,\lambda_2, \cdots,\lambda_N)^T$，并由$\lambda^*$求得原始问题的最优解$w^*,b^*$.
+对线性可分数据集，假设对偶问题的解为$\lambda^*=(\lambda_1,\lambda_2, \cdots,\lambda_N)^T$，并由$\lambda^*$求得原始问题的最优解为$w^*,b^*$.
 
-
+根据拉格朗日定理（$x^*和\lambda^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \lambda^*,\mu^*$满足的KKT条件）可得：
+$$
+\triangledown_xL(w^*,b^*,\lambda^*) = w^*-\sum_{i=1}^N\lambda_iy_ix_i = 0 \\
+\triangledown_bL(w^*,b^*,\lambda^*) = -\sum_{i=1}^N\lambda_iy_i=0 \\
+1-y_i(w^Tx_i+b) <= 0, i=1,2,\cdots, N \\
+\lambda_i >= 0, i=1,2,\cdots, N \\
+\lambda_i\left(1-y_i(w^Tx_i+b)\right)= 0, i=1,2,\cdots, N
+$$
+由此得
+$$
+w^* =\sum_{i=1}^N\lambda_iy_ix_i
+$$
+其中至少有一个$\lambda_j>0$(反证法：若所有$\lambda^*$的元素都为0，则$w^*$为0，而$w^*=0$不是原始问题的解；为什么呢？因为如果w为0的情况，输出y与输入x无关，这不符合机器学习的目的)，对此j有如下成立：
+$$
+y_j(w^{*T}x_j+b^*) - 1 = 0
+$$
+将$w^* =\sum_{i=1}^N\lambda_iy_ix_i$带入该式得：
+$$
+y_j(\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j + y_jb^* - 1 = 0 \\
+b^* = 
+\left\{\begin{matrix}
+1 -(\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j, \text{ if } y_j =1 \\
+-1 -(\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j, \text{ if } y_j =-1 
+\end{matrix}\right. \\
+整理上式得\\
+b^*=y_j- (\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j = y_j - \sum_{i=1}^N\lambda_iy_i(x_i \cdot x_j)
+$$
+现在w和b都有了，那么我们的分离超平面也有了：
+$$
+w^{*T}x+b^* = 0， 即\\
+\sum_{i=1}^N\lambda_iy_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\lambda_iy_i(x_i \cdot x_j)\right) = 0
+$$
+从上式可以看出，分类决策函数只依赖于输入x和训练样本输入的内机。
 
 
 
