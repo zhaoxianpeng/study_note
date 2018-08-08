@@ -313,9 +313,9 @@ $$
 $$
 由此得
 $$
-w^* =\sum_{i=1}^N\lambda_iy_ix_i
+w^* =\sum_{i=1}^N\lambda_i^*y_ix_i
 $$
-其中至少有一个$\lambda_j>0$此处样本j即为支持向量(反证法：若所有$\lambda^*$的元素都为0，则$w^*$为0，而$w^*=0$不是原始问题的解；为什么呢？因为如果w为0的情况，输出y与输入x无关，这不符合机器学习的目的)，对此j有如下成立：
+其中至少有一个$\lambda_j>0​$此处样本j即为支持向量(反证法：若所有$\lambda^*​$的元素都为0，则$w^*​$为0，而$w^*=0​$不是原始问题的解；为什么呢？因为如果w为0的情况，输出y与输入x无关，这不符合机器学习的目的)，对此j有如下成立：
 $$
 y_j(w^{*T}x_j+b^*) - 1 = 0
 $$
@@ -324,16 +324,16 @@ $$
 y_j(\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j + y_jb^* - 1 = 0 \\
 b^* = 
 \left\{\begin{matrix}
-1 -(\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j, \text{ if } y_j =1 \\
--1 -(\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j, \text{ if } y_j =-1 
+1 -(\sum_{i=1}^N\lambda_i^*y_ix_i)^Tx_j, \text{ if } y_j =1 \\
+-1 -(\sum_{i=1}^N\lambda_i^*y_ix_i)^Tx_j, \text{ if } y_j =-1 
 \end{matrix}\right. \\
 整理上式得\\
-b^*=y_j- (\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j = y_j - \sum_{i=1}^N\lambda_iy_i(x_i \cdot x_j)
+b^*=y_j- (\sum_{i=1}^N\lambda_i^*y_ix_i)^Tx_j = y_j - \sum_{i=1}^N\lambda_i^*y_i(x_i \cdot x_j)
 $$
 现在w和b都有了，那么我们的分离超平面也有了：
 $$
 w^{*T}x+b^* = 0， 即\\
-\sum_{i=1}^N\lambda_iy_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\lambda_iy_i(x_i \cdot x)\right) = 0
+\sum_{i=1}^N\lambda_i^*y_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\lambda_i^*y_i(x_i \cdot x)\right) = 0
 $$
 从上式可以看出，分类决策函数只依赖于输入x和训练样本输入的内积。
 
@@ -433,26 +433,44 @@ $$
    $$
    w^* = \sum_{i=1}^N\lambda_i^*y_ix_i\\
    $$
-   接下来求$b^*$，选取合适的样本j（实际上就是支持向量），一定存在这样的样本j满足如下条件
+   接下来求$b^*$，选取合适的样本j（实际上就是支持向量和异常点），一定存在这样的样本j满足如下条件
 
    * $0 \lt \lambda_j^* \lt C $
 
      为什么呢？
 
-     反证法，由于 $\mu = C-\lambda$又 $\mu \geq 0$，得$\lambda \leq C$,又$\lambda \geq 0$,所以在$0 \lt \lambda_j^* \lt C $之外的情况有两种：
+     反证法，首先，一定存在$\lambda_j > 0$,因为不可能所有的$\lambda$都等于，否则w就为0，而w为0显然不是原始问题的最优解。
 
-     * 若$\lambda_j = 0$，则$\mu_j = C$，则$\xi_j = 0$ 则 $1 - (y_jw^{*T}x_j+b^*) \leq 0$
-     * 若$\lambda_j =C $，则 $1 - (y_j(w^{*T}x_j+b^*) + \xi_j^*)  = 0$，则$\xi_j = 1 - (y_jw^{*T}x_j+b^*) \geq 0$.
-     * 若$0 \lt \lambda_j^* \lt C $, 则$\xi_j = 0$，再由$1 - (y_j(w^{*T}x_j+b^*) + \xi_j^*)  = 0$，得 $ 1 - (y_jw^{*T}x_j+b^*) = 0$
-     * 
+     当$\lambda_j^* > 0$时，有$1 - (y_j(w^{*T}x_j+b^*) + \xi_j^*)  = 0$，推出$y_j(w^{*T}x_j+b^*) = 1- \xi_j^*$, 
 
-   
+     然后怎么证明所有 $\lambda >0$的样本中，存在样本k使 $\lambda_k < C$, 还是反证法；
 
-   
+     假设在所有 $\lambda>0$的样本中，所有的样本都有 $\lambda = C$, 即， 所有这些样本中$\mu = 0$, 则所有这些样本中$\xi > 0$, 即所有这些样本到$w^{*T}x+b=0$的函数间隔都小于1；实际上应该一定存在位于边缘的样本的，也就是，一定存在$\lambda < C$的样本j。
 
-2. 
+   可以看到满足该条件的j到分类平面的函数间隔为1，即$w^{*T}x_j + b^* = 1 * y_j$
 
-3. 
+   实际上满足该条件的样本可能有多个，不同的j可能算出来的b可能略有不同，可以取均值，也可以任意选取一个j用来计算b。
+
+   这里b的计算过程不再赘述，与线性可分SVM的结果一样：
+   $$
+   b^*=y_j- (\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j = y_j - \sum_{i=1}^N\lambda_i^*y_i(x_i \cdot x_j)
+   $$
+
+
+同样的， $w^*,b^*$,都有了， 那么我们的分离超平面也有了：
+$$
+w^{*T}x+b^* = 0， 即\\
+\sum_{i=1}^N\lambda_i^*y_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\lambda_i^*y_i(x_i \cdot x)\right) = 0
+$$
+还是一样，从上式可以看出，分类决策函数只依赖于输入x和训练样本输入的内积。
+
+
+
+## 非线性SVM
+
+对解线性分类问题，线性SVM是非常有效的，但是有时分类问题是非线性的。这时可以使用非线性SVM，其主要特点是利用核方法。
+
+### 核技巧
 
 
 
