@@ -1,12 +1,14 @@
 # SVM
 
-## 模型
+[TOC]
+
+## 线性可分SVM和硬间隔最大化
 
 ### 目标
 
 有如下数据$D=\{x_i,y_i\}, i=1,2,\cdots,N; 其中 x\in R^{n}, y\in \{-1,1\}$，此处$x_i$为n维列向量；
 
-对于给定training data（线性可分），分类模型$f(x)=w^Tx+b, (w \in R^n)$使得所有分类都正确，并且使得分类间隔最大化。此处
+对于给定training data（线性可分），分类模型$f(x)=w^Tx+b, (w \in R^n)$使得所有分类都正确，并且使得分类间隔最大化。
 
 ### 间隔最大化
 
@@ -25,10 +27,10 @@ y_i(w^Tx_i + b) >= 1
 $$
 而对于分类间隔边缘的正负样本点$x_i^+$和$x_j^-$，有
 $$
-w^Tx_i+b = +1 \\
-w^Tx_j+b =-1
+w^Tx_i^++b = +1 \\
+w^Tx_j^-+b =-1
 $$
-这时，分类间隔的值为，位于分类间隔的正负样本到分类平面的距离之和，即：
+这时，分类间隔的值为位于分类间隔边缘的正负样本到分类平面的距离之和，即：
 $$
 \begin{align}
 d &= d_i + d_j \\
@@ -40,14 +42,16 @@ $$
 此时，该问题可以表示成有约束的最优化问题，即
 $$
 \underset{w,b}{max} \frac{2}{\left||w\right||}\\
-s.t. y_i(w^Tx_i+b) >= 1, i=1,2,\cdots, N
+s.t. \\
+y_i(w^Tx_i+b) >= 1, i=1,2,\cdots, N
 $$
-优化上述问题，为了计算方便，通常我们写成等价的如下形式：
+上述问题问题的解$w^*,b^*$可构成分类间隔最大的分类平面。为了计算方便，通常我们写成等价的如下形式：
 $$
 \underset{w,b}{min} \frac{1}{2}\left || w\right ||^2 \\
-s.t. 1-y_i(w^Tx_i+b) <= 0, i=1,2,\cdots, N
+s.t. \\
+1-y_i(w^Tx_i+b) <= 0, i=1,2,\cdots, N
 $$
-求得最优解 $w^*, b^*​$, 则分类超平面为$w^*x+b=0​$，分类决策函数为$f(x) = sign(w^*x+b)​$。
+求得最优解 $w^*, b^*$, 则分类超平面为$w^*x+b=0$，分类决策函数为$f(x) = sign(w^*x+b)$。
 
 ## 优化
 
@@ -60,7 +64,8 @@ $$
 原始问题如下：
 $$
 \underset{x \in R^d}{min}f(x) \\
-s.t. g_i(x) = 0, i=1,2,\cdots,k
+s.t. \\
+g_i(x) = 0, i=1,2,\cdots,k
 $$
 从几何角度看，该问题的目标是在由方程$g_i(x) = 0$确定的d-1维曲面上寻找能使目标函数f(x)最小化的点，此时不难得到如下结论：
 
@@ -70,7 +75,7 @@ $$
 
 * 在最优点$x^*$，目标函数在该点的梯度$\triangledown_xf(x^*)$正交于约束平面。
 
-  可通过反证法证明：若梯度$\triangledown_xf(x^*)$与约束曲面不正交，则仍可在约束曲面上移动该点是f(x)的函数值进一步下降。
+  可通过反证法证明：若梯度$\triangledown_xf(x^*)$与约束曲面不正交，则仍可在约束曲面上移动该点使f(x)的函数值进一步下降。
 
 由此可知，在最优点$x^*$处，梯度$\triangledown_xg_i(x^*)和\triangledown_xf(x^*))$的方向必相同或相反，即存在$\lambda_i \neq 0$使得：
 $$
@@ -102,7 +107,7 @@ $$
 \underset{x \in R^d}{min} f(x) \\
 s.t. g(x) <= 0
 $$
-不等式约束的时候，类似等式约束，从几何角度看，该问题的目标是在由方程$g(x) <= 0$确定的d维空间的一部分（半空间？）上寻找能使目标函数f(x)最小化的点。最优点$x*$所在位置有两种可能:
+不等式约束的时候，类似等式约束，从几何角度看，该问题的目标是在由方程$g(x) <= 0$确定的d维空间的一部分（半空间？）上寻找能使目标函数f(x)最小化的点。最优点$x^*$所在位置有两种可能:
 
 1. 在边界g(x)=0的曲面上; 
 
@@ -114,11 +119,11 @@ $$
 
    这种情况的时候约束不起作用,等同于无约束的f(x)的最优解,可以直接通过$\triangledown_xf(x)=0$来获得最优点,这等价于将$\lambda$置0然后对$\triangledown_xL(x,\lambda)$置0得到最优点.
 
-![v2-64dbe8af3d4e47e2586e883a1128b80f_hd](/home/xianpeng/workspace/study_note/v2-64dbe8af3d4e47e2586e883a1128b80f_hd.jpg)
+![v2-64dbe8af3d4e47e2586e883a1128b80f_hd](./v2-64dbe8af3d4e47e2586e883a1128b80f_hd.jpg)
 
 整合两种情况,必满足$\lambda g(x) = 0$,因此在约束g(x)<=0的约束下最小化f(x)可转化为如下约束最小化拉格朗日函数:
 $$
-\underset{x \in R^d}{min}f(x) \\
+\underset{x \in R^d}{min}L(x, \lambda) = f(x) + \lambda g(x) \\
 s.t. g(x) <=0 \\
 \lambda >= 0 \\
 \lambda g(x) = 0
@@ -150,9 +155,9 @@ $$
 $$
 \Gamma(\lambda, \mu) = \underset{x \in D}{inf}L(x, \lambda, \mu) \\
  = \underset{x\in D}{inf}\left( f(x) + \sum_{i=1}^m\lambda_ih_i(x) + \sum_{j=1}^m\mu_jg_j(x) \right) \\
- 这里inf的意思为下确界，每太理解，可想象成最小值min符号，但是又不是（数学上不严谨）
+ 这里inf的意思为下确界，没太理解，可想象成最小值min符号，但是又不是（数学上不严谨）
 $$
-此函数通常通过将拉格朗日乘子$L(x, \lambda, \mu)$对x求偏导并令其等于0来获得用$\lambda和\mu$来表示x的表达式,以此来获得对偶函数的表达形式.
+此函数通常通过将拉格朗日乘子$L(x, \lambda, \mu)​$对x求偏导并令其等于0来获得用$\lambda和\mu​$来表示x的表达式,以此来获得对偶函数的表达形式.
 
 若$\tilde{x} \in D$为主问题可行域中任意一点,则对于任意$\mu >= 0$和$\lambda$都有:
 $$
@@ -162,17 +167,17 @@ $$
 $$
 \Gamma(\lambda, \mu) = \underset{x \in D}{inf}L(x, \lambda, \mu) <= L(\tilde{x}, \lambda, \mu) <= f(\tilde{x})
 $$
-若主问题的最有值为$p^*$,则对于任意$\mu >= 0$和$\lambda$都有:
+若主问题的最优值为$p^*$,则对于任意$\mu >= 0$和$\lambda$都有:
 $$
 \Gamma(\lambda, \mu) <= p^*
 $$
-即对偶函数给出了主问题最有值的下界.
+即对偶函数给出了主问题最优值的下界.
 
 显然,这个下界取决于$\mu$和$\lambda$的值,于是一个很自然的问题是:基于对偶函数能获得的最好下界是什么?这就引出了优化问题: 
 $$
 \underset{\lambda, \mu>=0}{max}{\Gamma(\lambda,\mu)}
 $$
-该式就是主问题的对偶问题,其中$\lambda$和$\mu$称为对偶变量,无论主问题的凸性如何,对偶问题始终是凸优化问题(问题1).
+该式就是主问题的对偶问题,其中$\lambda​$和$\mu​$称为对偶变量,无论主问题的凸性如何,对偶问题始终是凸优化问题(问题1).
 
 若对偶问题的最优值为$d^*$,显然有$d^* <= p^*$,这称为弱对偶性;若$d^* = p^*$称为强对偶性,此时由对偶问题能获得主问题的最优下界.
 
@@ -206,7 +211,7 @@ $$
 
 
 
-### SVM问题优化
+### 线性可分SVM问题优化
 
 好了，我们的目的是优化SVM分类时的最大间隔，回到我们的优化目标：
 $$
@@ -266,12 +271,12 @@ $$
    \end{align} \\
    $$
 
-2. 求对偶函数$\underset{w,b}{min}L(w,b,\lambda)$对$\lambda$的极大：
+2. 求对偶函数$\underset{w,b}{min}L(w,b,\lambda)​$对$\lambda​$的极大：
    $$
    \underset{\lambda}{max}\underset{w,b}{min}L(w,b,\lambda)\\
    即：\\
-   \underset{\lambda}{max} \sum_{i=1}^N\lambda_i - \frac{1}
-   {2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) \\ 
+   \underset{\lambda}{max} \left [\sum_{i=1}^N\lambda_i - \frac{1}
+   {2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) \right]\\ 
    s.t. \\
    \sum_{i=1}^N\lambda_iy_i = 0 \\
    \lambda_i >=0, i=1,2,\cdots,N
@@ -286,9 +291,17 @@ $$
    $$
    由于原始问题满足强对偶条件，所以存在$w^*,b^*,\lambda^*$,使$w^*,b^*$为原始问题的最优解，$\lambda^*$为对偶问题的解，意味着求解原始问题，可以转化为求解对偶问题。
 
-### 引出核函数
+   可以用SMO算法求解最优的$\lambda^*$
 
-对线性可分数据集，假设对偶问题的解为$\lambda^*=(\lambda_1,\lambda_2, \cdots,\lambda_N)^T$，并由$\lambda^*$求得原始问题的最优解为$w^*,b^*$.
+##### SMO
+
+Todo
+
+
+
+### 引出分类平面只依赖输入与训练输入的向量内积相关
+
+对线性可分数据集，假设对偶问题的解为$\lambda^*=(\lambda_1,\lambda_2, \cdots,\lambda_N)^T$，接下来由$\lambda^*$求得原始问题的最优解为$w^*,b^*$.
 
 根据拉格朗日定理（$x^*和\lambda^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \lambda^*,\mu^*$满足的KKT条件）可得：
 $$
@@ -302,7 +315,7 @@ $$
 $$
 w^* =\sum_{i=1}^N\lambda_iy_ix_i
 $$
-其中至少有一个$\lambda_j>0$(反证法：若所有$\lambda^*$的元素都为0，则$w^*$为0，而$w^*=0$不是原始问题的解；为什么呢？因为如果w为0的情况，输出y与输入x无关，这不符合机器学习的目的)，对此j有如下成立：
+其中至少有一个$\lambda_j>0$此处样本j即为支持向量(反证法：若所有$\lambda^*$的元素都为0，则$w^*$为0，而$w^*=0$不是原始问题的解；为什么呢？因为如果w为0的情况，输出y与输入x无关，这不符合机器学习的目的)，对此j有如下成立：
 $$
 y_j(w^{*T}x_j+b^*) - 1 = 0
 $$
@@ -320,9 +333,126 @@ $$
 现在w和b都有了，那么我们的分离超平面也有了：
 $$
 w^{*T}x+b^* = 0， 即\\
-\sum_{i=1}^N\lambda_iy_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\lambda_iy_i(x_i \cdot x_j)\right) = 0
+\sum_{i=1}^N\lambda_iy_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\lambda_iy_i(x_i \cdot x)\right) = 0
 $$
-从上式可以看出，分类决策函数只依赖于输入x和训练样本输入的内机。
+从上式可以看出，分类决策函数只依赖于输入x和训练样本输入的内积。
+
+
+
+## 线性SVM和软间隔最大化
+
+上面线性可分SVM的算法对线性不可分训练数据是不适用的，因为这时上述方法中的不等式约束不能总是成立，要想办法扩展到线性不可分问题上，这里需要修改硬间隔最大化，引入软间隔最大化。
+
+有如下数据$D=\{x_i,y_i\}, i=1,2,\cdots,N; 其中 x\in R^{n}, y\in \{-1,1\}$，此处$x_i$为n维列向量；这些训练数据不是线性可分的，通常情况是，训练数据中，有一些特异点，将这些特异点去除之后，剩下的大部分的样本点组成的集合是线性可分的。
+
+线性不可分意味着某些样本点$(x_i, y_i)$不能满足函数间隔大于等于1的约束条件，为了解决这个问题，可以对每个样本点$(x_i,y_i)$引入一个松弛变量$\xi_i \geq 0$s使得函数间隔加上松弛变量大于等于1，即，约束变为:
+$$
+y_i(w^Tx_i + b) + \xi_i \geq 1
+$$
+同时，对每个$\xi_i$支付一个代价C。目标函数由原来的$\frac{1}{2}\left|\left| w\right|\right|^2$变成：
+$$
+\frac{1}{2}\left|\left| w\right|\right|^2 + C\sum_{i=1}^N\xi_i
+$$
+这里C>0称为惩罚参数：
+
+* C越大，对误分类的惩罚增大
+* C越小，对误分类的惩罚减小
+
+最小化上式意义为，是间隔尽量大，同时使误分类点的个数尽量小，这两者是此消彼长的，C是调和二者的系数。
+
+根据上面思路，考虑训练数据线性不可分时，线性SVM的学习问题，称为软间隔最大化。 线性不可分的线性SVM的学习问题转化为一下凸二次优化问题（原始问题）：
+$$
+\underset{w,b.\xi}{min} \quad \frac{1}{2}\left|\left| w\right|\right|^2 + C\sum_{i=1}^N\xi_i \\
+s.t. \quad y_i(w^Tx_i+b) + \xi_i \geq 1,  \quad i=1,2,\cdots,N \\
+\xi_i \geq 0, \quad i=1,2,\cdots,N
+$$
+该问题是一个凸二次优化问题，因此此问题的解是存在的，假设问题的解是$w^*,b^*$,于是可以得到分类超平面为$w^*x+b^*=0$及分类决策函数$f(x)=sign(w^*x+b^*)$
+
+### 线性SVM问题优化
+
+同样的，采用拉格朗日乘子法，引入拉格朗日函数：
+$$
+L(w,b,\xi, \lambda, \mu) =\frac{1}{2}\left|\left| w\right|\right|^2 + C\sum_{i=1}^N\xi_i  + \sum_{i=1}^N\lambda_i(1 - y_i(w^Tx_i+b) - \xi_i) - \sum_{i=1}^N\mu_i\xi_i
+$$
+对偶函数为拉格朗日的极大极小函数
+
+1. 首先求$L(w,b,\xi,\lambda,\mu)$对$w,b,\xi$的极小，由：
+   $$
+   \triangledown_wL(w,b,\xi,\lambda,\mu) = w -\sum_{i=1}^N\lambda_iy_ix_i = 0 \\
+   \triangledown_bL(w,b, \xi, \lambda, \mu) = -\sum_{i=1}^N\lambda_iy_i = 0 \\
+   \triangledown_\xi L(w,b,\xi,\lambda,\mu) = CI - \lambda - \mu \quad = 0\\
+   (此处I为元素为1的N×1维列向量，\lambda和\mu为N×1的列向量，求得的\xi同样是N×1的列向量) \\
+   最后一项也可写成分开的形式： \\
+   \triangledown_{\xi_i} L(w,b,\xi, \lambda, \mu) = C - \lambda_i - \mu_i = 0, \quad i=1,2,\cdots,N
+   $$
+   其中用到求导公式：
+   $$
+   \frac{d(\sum_{i=1}^N\xi_i)}{d\xi}, \quad 其中\xi为N×1的向量\\
+   相当于构造 向量 I 全为1的N维列向量 \\
+   \sum_{i=1}^N\xi_i相当于I^T\xi \\
+   根据向量求导公式： \frac{dAx}{dx} = A^T \\
+   因此：
+   \frac{d(\sum_{i=1}^N\xi_i)}{d\xi} = \frac{dI^T\xi}{d\xi} = I \\
+   $$
+   求解上式得到使得L取得最优的$w^*,b^*,\xi^*$
+   $$
+   w* = \sum_{i=1}^N\lambda_iy_ix_i \\
+   \sum_{i=1}^N\lambda_iy_i =0  \\
+   C-\lambda_i-\mu_i = 0, \quad i=1,2,\cdots,N
+   $$
+   将上面3式带入拉格朗日函数得：
+   $$
+   \begin{align}
+   \underset{w,b,\xi}{min}L(w,b,\xi,\lambda, \mu) &= \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j)  + \sum_{i=1}^N\lambda_i  \\
+   & + \sum_{i=1}^N\lambda_iy_ib +  C\sum_{i=1}^N\xi_i  + \sum_{i=1}^N\lambda_i\xi_i - \sum_{i=1}^N\mu_i\xi_i； \\
+   & \quad 后面这些项为0 \\
+   & = \sum_{i=1}^N\lambda_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) 
+   \end{align}
+   $$
+   由此得出原始问题的对偶问题：
+   $$
+   \underset{\lambda,\mu}{max}\underset{w,b,\xi}{min}L(w,b,\xi,\lambda, \mu) = \underset{\lambda,\mu}{max}\sum_{i=1}^N\lambda_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j)  \\
+   s.t. \quad \sum_{i=1}^N\lambda_iy_i =0  \\
+   C-\lambda_i-\mu_i = 0, \quad i=1,2,\cdots,N \\
+   \lambda_i \geq 0, \quad i=1,2,\cdots,N \\
+   \mu_i \geq 0, \quad i=1,2,\cdots,N
+   $$
+   假设现在已经求得了该对偶问题的最优解$\lambda^*,\mu^*$(用SMO算法或是其他)，接下来就是要求$w^*,b^*$来确定分类平面，由拉格朗日定理（$x^*和\lambda^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \lambda^*,\mu^*$满足的KKT条件）：
+   $$
+   \triangledown_wL(w^*,b^*,\xi^*, \lambda^*,\mu^*) = w^* -\sum_{i=1}^N\lambda_i^*y_ix_i = 0 \\
+   \triangledown_bL(w^*,b^*,\xi^*, \lambda^*,\mu^*) = -\sum_{i=1}^N\lambda_i^*y_i = 0 \\
+   \triangledown_\xi L(w^*,b^*,\xi^*, \lambda^*,\mu^*) =C - \lambda^* - \mu^* = 0 \\
+   \lambda_i^*(1 - (y_i(w^{*T}x_i+b^*) + \xi_i^*)  = 0,  \quad i=1,2,\cdots,N \\ 
+   -\mu_i^*\xi_i^* = 0, \quad i=1,2,\cdots,N  \\
+   \lambda_i^* \geq 0, \quad i=1,2,\cdots,N  \\
+   \mu_i^* \geq 0, \quad i=1,2,\cdots,N  \\
+   -\xi_i^* \leq 0, \quad i=1,2,\cdots,N  \\
+   1 - (y_i(w^{*T}x_i+b^*) + \xi_i^*) \leq 0
+   $$
+   根据上述式子可以求得：
+   $$
+   w^* = \sum_{i=1}^N\lambda_i^*y_ix_i\\
+   $$
+   接下来求$b^*$，选取合适的样本j（实际上就是支持向量），一定存在这样的样本j满足如下条件
+
+   * $0 \lt \lambda_j^* \lt C $
+
+     为什么呢？
+
+     反证法，由于 $\mu = C-\lambda$又 $\mu \geq 0$，得$\lambda \leq C$,又$\lambda \geq 0$,所以在$0 \lt \lambda_j^* \lt C $之外的情况有两种：
+
+     * 若$\lambda_j = 0$，则$\mu_j = C$，则$\xi_j = 0$ 则 $1 - (y_jw^{*T}x_j+b^*) \leq 0$
+     * 若$\lambda_j =C $，则 $1 - (y_j(w^{*T}x_j+b^*) + \xi_j^*)  = 0$，则$\xi_j = 1 - (y_jw^{*T}x_j+b^*) \geq 0$.
+     * 若$0 \lt \lambda_j^* \lt C $, 则$\xi_j = 0$，再由$1 - (y_j(w^{*T}x_j+b^*) + \xi_j^*)  = 0$，得 $ 1 - (y_jw^{*T}x_j+b^*) = 0$
+     * 
+
+   
+
+   
+
+2. 
+
+3. 
 
 
 
@@ -342,6 +472,9 @@ $$
 5. https://blog.csdn.net/ecnu18918079120/article/details/72971034
 6. 《机器学习》周志华
 7. 《统计机器学习》李航
+8. https://www.cnblogs.com/ooon/p/5721119.html
+9. https://blog.csdn.net/xlmj23/article/details/78375248?locationNum=5&fps=1
+10. https://blog.csdn.net/lipengcn/article/details/52815429
 
 
 
