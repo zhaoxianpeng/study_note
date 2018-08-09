@@ -77,26 +77,26 @@ $$
 
   可通过反证法证明：若梯度$\triangledown_xf(x^*)$与约束曲面不正交，则仍可在约束曲面上移动该点使f(x)的函数值进一步下降。
 
-由此可知，在最优点$x^*$处，梯度$\triangledown_xg_i(x^*)和\triangledown_xf(x^*))$的方向必相同或相反，即存在$\lambda_i \neq 0$使得：
+由此可知，在最优点$x^*$处，梯度$\triangledown_xg_i(x^*)和\triangledown_xf(x^*))$的方向必相同或相反，即存在$\alpha_i \neq 0$使得：
 $$
-\lambda_i\triangledown_xg_i(x^*) + \triangledown_xf(x^*) = 0
+\alpha_i\triangledown_xg_i(x^*) + \triangledown_xf(x^*) = 0
 $$
-$\lambda_i$称为拉格朗日乘子（对于等式约束 $\lambda$可能为正也可能为负）。
+$\alpha_i$称为拉格朗日乘子（对于等式约束 $\alpha$可能为正也可能为负）。
 
 定义拉格朗日函数如下：
 $$
-L(x, \lambda) = f(x) + \sum_{i=1}^k \lambda_i g_i(x)
+L(x, \alpha) = f(x) + \sum_{i=1}^k \alpha_i g_i(x)
 $$
 不难发现：
 $$
-\frac{\part{L(x,\lambda)}}{\part x}=0，\\
- 即：\triangledown_xf(x)+\sum_{i=1}^k\lambda_i\triangledown_xg_i(x) = 0 \\
- \frac{\part{L(x,\lambda)}}{\part \lambda}=0, \\
+\frac{\part{L(x,\alpha)}}{\part x}=0，\\
+ 即：\triangledown_xf(x)+\sum_{i=1}^k\alpha_i\triangledown_xg_i(x) = 0 \\
+ \frac{\part{L(x,\alpha)}}{\part \alpha}=0, \\
  即约束条件：g(x) = 0 \\
- 注意，这里的x\in R^d，\lambda \in R^k都是向量而不是标量，\\
+ 注意，这里的x\in R^d，\alpha \in R^k都是向量而不是标量，\\
  也就是这里的0也不是标量，而是指0向量，即所有元素为0
 $$
-于是，原始约束最优化问题可转化为对拉格朗日函数$L(x,\lambda)​$的无约束最优化问题。
+于是，原始约束最优化问题可转化为对拉格朗日函数$L(x,\alpha)​$的无约束最优化问题。
 
 #### 不等式约束
 
@@ -111,22 +111,22 @@ $$
 
 1. 在边界g(x)=0的曲面上; 
 
-   这种情况类似于等式约束,但是有一点不一样,此时 $\triangledown_xg_i(x^*)和\triangledown_xf(x^*))$的方向必相反,即存在常数$\lambda>0$使得$\lambda_i\triangledown_xg_i(x^*) + \triangledown_xf(x^*) = 0$. 
+   这种情况类似于等式约束,但是有一点不一样,此时 $\triangledown_xg_i(x^*)和\triangledown_xf(x^*))$的方向必相反,即存在常数$\alpha>0$使得$\alpha_i\triangledown_xg_i(x^*) + \triangledown_xf(x^*) = 0$. 
 
-   至于为什么? 参考下图左边,函数f(x)在最优解$x^*$附近变化的趋势是在可行解区域内侧较大外侧较小,而与之对应的是函数g(x)在可行解区域内侧小于0,区域外侧大于0,所以在最优解$x^*$附近的变化趋势是内部较小外部较大,意味着两者梯度方向相反,因此可推断出$\lambda>0$.
+   至于为什么? 参考下图左边,函数f(x)在最优解$x^*$附近变化的趋势是在可行解区域内侧较大外侧较小,而与之对应的是函数g(x)在可行解区域内侧小于0,区域外侧大于0,所以在最优解$x^*$附近的变化趋势是内部较小外部较大,意味着两者梯度方向相反,因此可推断出$\alpha>0$.
 
 2. 在g(x)<0的地方.
 
-   这种情况的时候约束不起作用,等同于无约束的f(x)的最优解,可以直接通过$\triangledown_xf(x)=0$来获得最优点,这等价于将$\lambda$置0然后对$\triangledown_xL(x,\lambda)$置0得到最优点.
+   这种情况的时候约束不起作用,等同于无约束的f(x)的最优解,可以直接通过$\triangledown_xf(x)=0$来获得最优点,这等价于将$\alpha$置0然后对$\triangledown_xL(x,\alpha)$置0得到最优点.
 
 ![v2-64dbe8af3d4e47e2586e883a1128b80f_hd](./v2-64dbe8af3d4e47e2586e883a1128b80f_hd.jpg)
 
-整合两种情况,必满足$\lambda g(x) = 0$,因此在约束g(x)<=0的约束下最小化f(x)可转化为如下约束最小化拉格朗日函数:
+整合两种情况,必满足$\alpha g(x) = 0$,因此在约束g(x)<=0的约束下最小化f(x)可转化为如下约束最小化拉格朗日函数:
 $$
-\underset{x \in R^d}{min}L(x, \lambda) = f(x) + \lambda g(x) \\
+\underset{x \in R^d}{min}L(x, \alpha) = f(x) + \alpha g(x) \\
 s.t. g(x) <=0 \\
-\lambda >= 0 \\
-\lambda g(x) = 0
+\alpha >= 0 \\
+\alpha g(x) = 0
 $$
 上式称KKT条件.
 
@@ -141,9 +141,9 @@ g_j(x) <=0, (j=1,2,\cdots, n)
 $$
 上式称为主问题.
 
-引入拉格朗日乘子$\lambda = (\lambda_1, \lambda_2, \cdots, \lambda_m)^T$和$\mu = (\mu_1, \mu_2, \cdots, \mu_n)^T$,相应的拉格朗日函数为:
+引入拉格朗日乘子$\alpha = (\alpha_1, \alpha_2, \cdots, \alpha_m)^T$和$\mu = (\mu_1, \mu_2, \cdots, \mu_n)^T$,相应的拉格朗日函数为:
 $$
-L(x, \lambda, \mu) = f(x) + \sum_{i=1}^m\lambda_ih_i(x) + \sum_{j=1}^m\mu_jg_j(x) \\
+L(x, \alpha, \mu) = f(x) + \sum_{i=1}^m\alpha_ih_i(x) + \sum_{j=1}^m\mu_jg_j(x) \\
 \begin{align}
 & s.t. \\
 & g_j(x) <=0, j=(1,2,\cdots,n) \\
@@ -153,31 +153,31 @@ L(x, \lambda, \mu) = f(x) + \sum_{i=1}^m\lambda_ih_i(x) + \sum_{j=1}^m\mu_jg_j(x
 $$
 以上为主问题的拉格朗日乘子函数,其拉格朗日对偶函数为:
 $$
-\Gamma(\lambda, \mu) = \underset{x \in D}{inf}L(x, \lambda, \mu) \\
- = \underset{x\in D}{inf}\left( f(x) + \sum_{i=1}^m\lambda_ih_i(x) + \sum_{j=1}^m\mu_jg_j(x) \right) \\
+\Gamma(\alpha, \mu) = \underset{x \in D}{inf}L(x, \alpha, \mu) \\
+ = \underset{x\in D}{inf}\left( f(x) + \sum_{i=1}^m\alpha_ih_i(x) + \sum_{j=1}^m\mu_jg_j(x) \right) \\
  这里inf的意思为下确界，没太理解，可想象成最小值min符号，但是又不是（数学上不严谨）
 $$
-此函数通常通过将拉格朗日乘子$L(x, \lambda, \mu)​$对x求偏导并令其等于0来获得用$\lambda和\mu​$来表示x的表达式,以此来获得对偶函数的表达形式.
+此函数通常通过将拉格朗日乘子$L(x, \alpha, \mu)​$对x求偏导并令其等于0来获得用$\alpha和\mu​$来表示x的表达式,以此来获得对偶函数的表达形式.
 
-若$\tilde{x} \in D$为主问题可行域中任意一点,则对于任意$\mu >= 0$和$\lambda$都有:
+若$\tilde{x} \in D$为主问题可行域中任意一点,则对于任意$\mu >= 0$和$\alpha$都有:
 $$
-\sum_{i=1}^m\lambda_ih_i(x) + \sum_{j=1}^m\mu_jg_j(x)  <=0
+\sum_{i=1}^m\alpha_ih_i(x) + \sum_{j=1}^m\mu_jg_j(x)  <=0
 $$
 进而有
 $$
-\Gamma(\lambda, \mu) = \underset{x \in D}{inf}L(x, \lambda, \mu) <= L(\tilde{x}, \lambda, \mu) <= f(\tilde{x})
+\Gamma(\alpha, \mu) = \underset{x \in D}{inf}L(x, \alpha, \mu) <= L(\tilde{x}, \alpha, \mu) <= f(\tilde{x})
 $$
-若主问题的最优值为$p^*$,则对于任意$\mu >= 0$和$\lambda$都有:
+若主问题的最优值为$p^*$,则对于任意$\mu >= 0$和$\alpha$都有:
 $$
-\Gamma(\lambda, \mu) <= p^*
+\Gamma(\alpha, \mu) <= p^*
 $$
 即对偶函数给出了主问题最优值的下界.
 
-显然,这个下界取决于$\mu$和$\lambda$的值,于是一个很自然的问题是:基于对偶函数能获得的最好下界是什么?这就引出了优化问题: 
+显然,这个下界取决于$\mu$和$\alpha$的值,于是一个很自然的问题是:基于对偶函数能获得的最好下界是什么?这就引出了优化问题: 
 $$
-\underset{\lambda, \mu>=0}{max}{\Gamma(\lambda,\mu)}
+\underset{\alpha, \mu>=0}{max}{\Gamma(\alpha,\mu)}
 $$
-该式就是主问题的对偶问题,其中$\lambda​$和$\mu​$称为对偶变量,无论主问题的凸性如何,对偶问题始终是凸优化问题(问题1).
+该式就是主问题的对偶问题,其中$\alpha​$和$\mu​$称为对偶变量,无论主问题的凸性如何,对偶问题始终是凸优化问题(问题1).
 
 若对偶问题的最优值为$d^*$,显然有$d^* <= p^*$,这称为弱对偶性;若$d^* = p^*$称为强对偶性,此时由对偶问题能获得主问题的最优下界.
 
@@ -190,12 +190,12 @@ $$
 
 ##### 定理
 
-对主问题和对偶问题，假设满足上述强对偶性条件；则$x^*和\lambda^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \lambda^*,\mu^*$满足下面的KKT条件
+对主问题和对偶问题，假设满足上述强对偶性条件；则$x^*和\alpha^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \alpha^*,\mu^*$满足下面的KKT条件
 $$
 \begin{align}
-& \triangledown_xL(x^*, \lambda^*,\mu^*) = 0 \\
-& \triangledown_\lambda L(x^*, \lambda^*,\mu^*) = 0 \\
-& \triangledown_\mu L(x^*, \lambda^*,\mu^*) = 0 \\
+& \triangledown_xL(x^*, \alpha^*,\mu^*) = 0 \\
+& \triangledown_\alpha L(x^*, \alpha^*,\mu^*) = 0 \\
+& \triangledown_\mu L(x^*, \alpha^*,\mu^*) = 0 \\
 & g_j(x) <=0, j=(1,2,\cdots,n) \\
 & \mu_j >= 0, j=(1,2,\cdots,n)\\
 & \mu_j g_j(x) = 0,j=(1,2,\cdots,n) \\
@@ -219,31 +219,31 @@ $$
 s.t. \\
 1-y_i(w^Tx_i+b) <= 0, i=1,2,\cdots, N
 $$
-构造拉格朗日函数$\lambda=(\lambda_1,\cdots,\lambda_N)^T$：
+构造拉格朗日函数$\alpha=(\alpha_1,\cdots,\alpha_N)^T$：
 $$
-L(w,b,\lambda) = \frac{1}{2}\left|\left|w\right|\right|^2 + \sum_{i=1}^N\lambda_i(1-y_i(w^Tx_i+b)) \\
+L(w,b,\alpha) = \frac{1}{2}\left|\left|w\right|\right|^2 + \sum_{i=1}^N\alpha_i(1-y_i(w^Tx_i+b)) \\
 s.t. \\
 1-y_i(w^Tx_i+b) <= 0, i=1,2,\cdots, N \\
-\lambda_i >= 0, i=1,2,\cdots, N \\
-\lambda_i\left(1-y_i(w^Tx_i+b)\right)= 0, i=1,2,\cdots, N
+\alpha_i >= 0, i=1,2,\cdots, N \\
+\alpha_i\left(1-y_i(w^Tx_i+b)\right)= 0, i=1,2,\cdots, N
 $$
 
 
 原始问题的对偶问题是极大极小问题：
 $$
-\underset{\lambda}{max} \underset{w,b}{min}L(w,b,\lambda) \\
+\underset{\alpha}{max} \underset{w,b}{min}L(w,b,\alpha) \\
 严格来说应该是这样：
-\underset{\lambda}{max} \underset{w,b}{inf}L(w,b,\lambda) \\
+\underset{\alpha}{max} \underset{w,b}{inf}L(w,b,\alpha) \\
 至于为什么可以写成min不确定，猜测可能是强对偶问题所以等价？问题部分。
 $$
-为了得到对偶问题的解，需要先求$L(w,b,\lambda)$对w,b的极小，再求对$\lambda$的极大。
+为了得到对偶问题的解，需要先求$L(w,b,\alpha)$对w,b的极小，再求对$\alpha$的极大。
 
-1. 求$\underset{w,b}{min}L(w,b,\lambda)$
+1. 求$\underset{w,b}{min}L(w,b,\alpha)$
 
-   将拉格朗日函数$L(w,b,\lambda)$分别对w和b求偏导并令其等于0：
+   将拉格朗日函数$L(w,b,\alpha)$分别对w和b求偏导并令其等于0：
    $$
-   \triangledown_wL(w,b,\lambda) = w -\sum_{i=1}^N\lambda_iy_ix_i = 0 \\
-   \triangledown_bL(w,b, \lambda) = -\sum_{i=1}^N\lambda_iy_i = 0
+   \triangledown_wL(w,b,\alpha) = w -\sum_{i=1}^N\alpha_iy_ix_i = 0 \\
+   \triangledown_bL(w,b, \alpha) = -\sum_{i=1}^N\alpha_iy_i = 0
    $$
    用到如下求导公式
    $$
@@ -254,44 +254,44 @@ $$
    $$
    得：
    $$
-   w^* = \sum_{i=1}^N\lambda_iy_ix_i \\
-   \sum_{i=1}^N\lambda_iy_i = 0
+   w^* = \sum_{i=1}^N\alpha_iy_ix_i \\
+   \sum_{i=1}^N\alpha_iy_i = 0
    $$
    将w和b带入拉格朗日函数得：
    $$
    \begin{align}
-   L(w,b,\lambda) & =\frac{1}{2}\left|\left|w\right|\right|^2 + \sum_{i=1}^N\lambda_i(1-y_i(w^Tx_i+b)) \\
-   &= \frac{1}{2}\left(\sum_{i=1}^N\lambda_iy_ix_i\right)^T\left(\sum_{i=1}^N\lambda_iy_ix_i\right) + \sum_{i=1}^N\lambda_i(1-y_i(\left(\sum_{j=1}^N\lambda_jy_jx_j\right)^Tx_i + b)) \\
-   & x_i为列向量，\lambda_i y_i都为标量，x_i^Tx_j 为标量等价于x_i \cdot x_j \\
-   & = \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\lambda_iy_ib + \sum_{i=1}^N\lambda_i \\
-   & = \sum_{i=1}^N\lambda_i - \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) \\
+   L(w,b,\alpha) & =\frac{1}{2}\left|\left|w\right|\right|^2 + \sum_{i=1}^N\alpha_i(1-y_i(w^Tx_i+b)) \\
+   &= \frac{1}{2}\left(\sum_{i=1}^N\alpha_iy_ix_i\right)^T\left(\sum_{i=1}^N\alpha_iy_ix_i\right) + \sum_{i=1}^N\alpha_i(1-y_i(\left(\sum_{j=1}^N\alpha_jy_jx_j\right)^Tx_i + b)) \\
+   & x_i为列向量，\alpha_i y_i都为标量，x_i^Tx_j 为标量等价于x_i \cdot x_j \\
+   & = \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\alpha_iy_ib + \sum_{i=1}^N\alpha_i \\
+   & = \sum_{i=1}^N\alpha_i - \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j) \\
    即：\\
-   \underset{w,b}{min}L(w,b,\lambda) & =  \sum_{i=1}^N\lambda_i - \frac{1}
-   {2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) \\
+   \underset{w,b}{min}L(w,b,\alpha) & =  \sum_{i=1}^N\alpha_i - \frac{1}
+   {2}\sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j) \\
    \end{align} \\
    $$
 
-2. 求对偶函数$\underset{w,b}{min}L(w,b,\lambda)​$对$\lambda​$的极大：
+2. 求对偶函数$\underset{w,b}{min}L(w,b,\alpha)​$对$\alpha​$的极大：
    $$
-   \underset{\lambda}{max}\underset{w,b}{min}L(w,b,\lambda)\\
+   \underset{\alpha}{max}\underset{w,b}{min}L(w,b,\alpha)\\
    即：\\
-   \underset{\lambda}{max} \left [\sum_{i=1}^N\lambda_i - \frac{1}
-   {2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) \right]\\ 
+   \underset{\alpha}{max} \left [\sum_{i=1}^N\alpha_i - \frac{1}
+   {2}\sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j) \right]\\ 
    s.t. \\
-   \sum_{i=1}^N\lambda_iy_i = 0 \\
-   \lambda_i >=0, i=1,2,\cdots,N
+   \sum_{i=1}^N\alpha_iy_i = 0 \\
+   \alpha_i >=0, i=1,2,\cdots,N
    $$
    将极大换成极小，得到下面等价的对偶最优化问题：
    $$
-   \underset{\lambda}{min} \frac{1}
-   {2}\sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\lambda_i \\ 
+   \underset{\alpha}{min} \frac{1}
+   {2}\sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\alpha_i \\ 
    s.t. \\
-   \sum_{i=1}^N\lambda_iy_i = 0 \\
-   \lambda_i >=0, i=1,2,\cdots,N \\
+   \sum_{i=1}^N\alpha_iy_i = 0 \\
+   \alpha_i >=0, i=1,2,\cdots,N \\
    $$
-   由于原始问题满足强对偶条件，所以存在$w^*,b^*,\lambda^*$,使$w^*,b^*$为原始问题的最优解，$\lambda^*$为对偶问题的解，意味着求解原始问题，可以转化为求解对偶问题。
+   由于原始问题满足强对偶条件，所以存在$w^*,b^*,\alpha^*$,使$w^*,b^*$为原始问题的最优解，$\alpha^*$为对偶问题的解，意味着求解原始问题，可以转化为求解对偶问题。
 
-   可以用SMO算法求解最优的$\lambda^*$
+   可以用SMO算法求解最优的$\alpha^*$
 
 ##### SMO
 
@@ -301,39 +301,39 @@ Todo
 
 ### 引出分类平面只依赖输入与训练输入的向量内积相关
 
-对线性可分数据集，假设对偶问题的解为$\lambda^*=(\lambda_1,\lambda_2, \cdots,\lambda_N)^T$，接下来由$\lambda^*$求得原始问题的最优解为$w^*,b^*$.
+对线性可分数据集，假设对偶问题的解为$\alpha^*=(\alpha_1,\alpha_2, \cdots,\alpha_N)^T$，接下来由$\alpha^*$求得原始问题的最优解为$w^*,b^*$.
 
-根据拉格朗日定理（$x^*和\lambda^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \lambda^*,\mu^*$满足的KKT条件）可得：
+根据拉格朗日定理（$x^*和\alpha^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \alpha^*,\mu^*$满足的KKT条件）可得：
 $$
-\triangledown_xL(w^*,b^*,\lambda^*) = w^*-\sum_{i=1}^N\lambda_iy_ix_i = 0 \\
-\triangledown_bL(w^*,b^*,\lambda^*) = -\sum_{i=1}^N\lambda_iy_i=0 \\
+\triangledown_xL(w^*,b^*,\alpha^*) = w^*-\sum_{i=1}^N\alpha_iy_ix_i = 0 \\
+\triangledown_bL(w^*,b^*,\alpha^*) = -\sum_{i=1}^N\alpha_iy_i=0 \\
 1-y_i(w^Tx_i+b) <= 0, i=1,2,\cdots, N \\
-\lambda_i >= 0, i=1,2,\cdots, N \\
-\lambda_i\left(1-y_i(w^Tx_i+b)\right)= 0, i=1,2,\cdots, N
+\alpha_i >= 0, i=1,2,\cdots, N \\
+\alpha_i\left(1-y_i(w^Tx_i+b)\right)= 0, i=1,2,\cdots, N
 $$
 由此得
 $$
-w^* =\sum_{i=1}^N\lambda_i^*y_ix_i
+w^* =\sum_{i=1}^N\alpha_i^*y_ix_i
 $$
-其中至少有一个$\lambda_j>0​$此处样本j即为支持向量(反证法：若所有$\lambda^*​$的元素都为0，则$w^*​$为0，而$w^*=0​$不是原始问题的解；为什么呢？因为如果w为0的情况，输出y与输入x无关，这不符合机器学习的目的)，对此j有如下成立：
+其中至少有一个$\alpha_j>0​$此处样本j即为支持向量(反证法：若所有$\alpha^*​$的元素都为0，则$w^*​$为0，而$w^*=0​$不是原始问题的解；为什么呢？因为如果w为0的情况，输出y与输入x无关，这不符合机器学习的目的)，对此j有如下成立：
 $$
 y_j(w^{*T}x_j+b^*) - 1 = 0
 $$
-将$w^* =\sum_{i=1}^N\lambda_iy_ix_i$带入该式得：
+将$w^* =\sum_{i=1}^N\alpha_iy_ix_i$带入该式得：
 $$
-y_j(\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j + y_jb^* - 1 = 0 \\
+y_j(\sum_{i=1}^N\alpha_iy_ix_i)^Tx_j + y_jb^* - 1 = 0 \\
 b^* = 
 \left\{\begin{matrix}
-1 -(\sum_{i=1}^N\lambda_i^*y_ix_i)^Tx_j, \text{ if } y_j =1 \\
--1 -(\sum_{i=1}^N\lambda_i^*y_ix_i)^Tx_j, \text{ if } y_j =-1 
+1 -(\sum_{i=1}^N\alpha_i^*y_ix_i)^Tx_j, \text{ if } y_j =1 \\
+-1 -(\sum_{i=1}^N\alpha_i^*y_ix_i)^Tx_j, \text{ if } y_j =-1 
 \end{matrix}\right. \\
 整理上式得\\
-b^*=y_j- (\sum_{i=1}^N\lambda_i^*y_ix_i)^Tx_j = y_j - \sum_{i=1}^N\lambda_i^*y_i(x_i \cdot x_j)
+b^*=y_j- (\sum_{i=1}^N\alpha_i^*y_ix_i)^Tx_j = y_j - \sum_{i=1}^N\alpha_i^*y_i(x_i \cdot x_j)
 $$
 现在w和b都有了，那么我们的分离超平面也有了：
 $$
 w^{*T}x+b^* = 0， 即\\
-\sum_{i=1}^N\lambda_i^*y_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\lambda_i^*y_i(x_i \cdot x)\right) = 0
+\sum_{i=1}^N\alpha_i^*y_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\alpha_i^*y_i(x_i \cdot x)\right) = 0
 $$
 从上式可以看出，分类决策函数只依赖于输入x和训练样本输入的内积。
 
@@ -372,18 +372,18 @@ $$
 
 同样的，采用拉格朗日乘子法，引入拉格朗日函数：
 $$
-L(w,b,\xi, \lambda, \mu) =\frac{1}{2}\left|\left| w\right|\right|^2 + C\sum_{i=1}^N\xi_i  + \sum_{i=1}^N\lambda_i(1 - y_i(w^Tx_i+b) - \xi_i) - \sum_{i=1}^N\mu_i\xi_i
+L(w,b,\xi, \alpha, \mu) =\frac{1}{2}\left|\left| w\right|\right|^2 + C\sum_{i=1}^N\xi_i  + \sum_{i=1}^N\alpha_i(1 - y_i(w^Tx_i+b) - \xi_i) - \sum_{i=1}^N\mu_i\xi_i
 $$
 对偶函数为拉格朗日的极大极小函数
 
-1. 首先求$L(w,b,\xi,\lambda,\mu)$对$w,b,\xi$的极小，由：
+1. 首先求$L(w,b,\xi,\alpha,\mu)$对$w,b,\xi$的极小，由：
    $$
-   \triangledown_wL(w,b,\xi,\lambda,\mu) = w -\sum_{i=1}^N\lambda_iy_ix_i = 0 \\
-   \triangledown_bL(w,b, \xi, \lambda, \mu) = -\sum_{i=1}^N\lambda_iy_i = 0 \\
-   \triangledown_\xi L(w,b,\xi,\lambda,\mu) = CI - \lambda - \mu \quad = 0\\
-   (此处I为元素为1的N×1维列向量，\lambda和\mu为N×1的列向量，求得的\xi同样是N×1的列向量) \\
+   \triangledown_wL(w,b,\xi,\alpha,\mu) = w -\sum_{i=1}^N\alpha_iy_ix_i = 0 \\
+   \triangledown_bL(w,b, \xi, \alpha, \mu) = -\sum_{i=1}^N\alpha_iy_i = 0 \\
+   \triangledown_\xi L(w,b,\xi,\alpha,\mu) = CI - \alpha - \mu \quad = 0\\
+   (此处I为元素为1的N×1维列向量，\alpha和\mu为N×1的列向量，求得的\xi同样是N×1的列向量) \\
    最后一项也可写成分开的形式： \\
-   \triangledown_{\xi_i} L(w,b,\xi, \lambda, \mu) = C - \lambda_i - \mu_i = 0, \quad i=1,2,\cdots,N
+   \triangledown_{\xi_i} L(w,b,\xi, \alpha, \mu) = C - \alpha_i - \mu_i = 0, \quad i=1,2,\cdots,N
    $$
    其中用到求导公式：
    $$
@@ -396,71 +396,82 @@ $$
    $$
    求解上式得到使得L取得最优的$w^*,b^*,\xi^*$
    $$
-   w* = \sum_{i=1}^N\lambda_iy_ix_i \\
-   \sum_{i=1}^N\lambda_iy_i =0  \\
-   C-\lambda_i-\mu_i = 0, \quad i=1,2,\cdots,N
+   w* = \sum_{i=1}^N\alpha_iy_ix_i \\
+   \sum_{i=1}^N\alpha_iy_i =0  \\
+   C-\alpha_i-\mu_i = 0, \quad i=1,2,\cdots,N
    $$
    将上面3式带入拉格朗日函数得：
    $$
    \begin{align}
-   \underset{w,b,\xi}{min}L(w,b,\xi,\lambda, \mu) &= \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j)  + \sum_{i=1}^N\lambda_i  \\
-   & + \sum_{i=1}^N\lambda_iy_ib +  C\sum_{i=1}^N\xi_i  + \sum_{i=1}^N\lambda_i\xi_i - \sum_{i=1}^N\mu_i\xi_i； \\
+   \underset{w,b,\xi}{min}L(w,b,\xi,\alpha, \mu) &= \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j) - \sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)  + \sum_{i=1}^N\alpha_i  \\
+   & + \sum_{i=1}^N\alpha_iy_ib +  C\sum_{i=1}^N\xi_i  + \sum_{i=1}^N\alpha_i\xi_i - \sum_{i=1}^N\mu_i\xi_i； \\
    & \quad 后面这些项为0 \\
-   & = \sum_{i=1}^N\lambda_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j) 
+   & = \sum_{i=1}^N\alpha_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j) 
    \end{align}
    $$
    由此得出原始问题的对偶问题：
    $$
-   \underset{\lambda,\mu}{max}\underset{w,b,\xi}{min}L(w,b,\xi,\lambda, \mu) = \underset{\lambda,\mu}{max}\sum_{i=1}^N\lambda_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\lambda_i\lambda_jy_iy_j(x_i \cdot x_j)  \\
-   s.t. \quad \sum_{i=1}^N\lambda_iy_i =0  \\
-   C-\lambda_i-\mu_i = 0, \quad i=1,2,\cdots,N \\
-   \lambda_i \geq 0, \quad i=1,2,\cdots,N \\
+   \underset{\alpha,\mu}{max}\underset{w,b,\xi}{min}L(w,b,\xi,\alpha, \mu) = \underset{\alpha,\mu}{max}\sum_{i=1}^N\alpha_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)  \\
+   s.t. \quad \sum_{i=1}^N\alpha_iy_i =0  \\
+   C-\alpha_i-\mu_i = 0, \quad i=1,2,\cdots,N \\
+   \alpha_i \geq 0, \quad i=1,2,\cdots,N \\
    \mu_i \geq 0, \quad i=1,2,\cdots,N
    $$
-   假设现在已经求得了该对偶问题的最优解$\lambda^*,\mu^*$(用SMO算法或是其他)，接下来就是要求$w^*,b^*$来确定分类平面，由拉格朗日定理（$x^*和\lambda^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \lambda^*,\mu^*$满足的KKT条件）：
+   假设现在已经求得了该对偶问题的最优解$\alpha^*,\mu^*$(用SMO算法或是其他)，接下来就是要求$w^*,b^*$来确定分类平面，由拉格朗日定理（$x^*和\alpha^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \alpha^*,\mu^*$满足的KKT条件）：
    $$
-   \triangledown_wL(w^*,b^*,\xi^*, \lambda^*,\mu^*) = w^* -\sum_{i=1}^N\lambda_i^*y_ix_i = 0 \\
-   \triangledown_bL(w^*,b^*,\xi^*, \lambda^*,\mu^*) = -\sum_{i=1}^N\lambda_i^*y_i = 0 \\
-   \triangledown_\xi L(w^*,b^*,\xi^*, \lambda^*,\mu^*) =C - \lambda^* - \mu^* = 0 \\
-   \lambda_i^*(1 - (y_i(w^{*T}x_i+b^*) + \xi_i^*)  = 0,  \quad i=1,2,\cdots,N \\ 
+   \triangledown_wL(w^*,b^*,\xi^*, \alpha^*,\mu^*) = w^* -\sum_{i=1}^N\alpha_i^*y_ix_i = 0 \\
+   \triangledown_bL(w^*,b^*,\xi^*, \alpha^*,\mu^*) = -\sum_{i=1}^N\alpha_i^*y_i = 0 \\
+   \triangledown_\xi L(w^*,b^*,\xi^*, \alpha^*,\mu^*) =C - \alpha^* - \mu^* = 0 \\
+   \alpha_i^*(1 - (y_i(w^{*T}x_i+b^*) + \xi_i^*)  = 0,  \quad i=1,2,\cdots,N \\ 
    -\mu_i^*\xi_i^* = 0, \quad i=1,2,\cdots,N  \\
-   \lambda_i^* \geq 0, \quad i=1,2,\cdots,N  \\
+   \alpha_i^* \geq 0, \quad i=1,2,\cdots,N  \\
    \mu_i^* \geq 0, \quad i=1,2,\cdots,N  \\
    -\xi_i^* \leq 0, \quad i=1,2,\cdots,N  \\
    1 - (y_i(w^{*T}x_i+b^*) + \xi_i^*) \leq 0
    $$
    根据上述式子可以求得：
    $$
-   w^* = \sum_{i=1}^N\lambda_i^*y_ix_i\\
+   w^* = \sum_{i=1}^N\alpha_i^*y_ix_i\\
    $$
    接下来求$b^*$，选取合适的样本j（实际上就是支持向量和异常点），一定存在这样的样本j满足如下条件
 
-   * $0 \lt \lambda_j^* \lt C $
+   * $0 \lt \alpha_j^* \lt C $
 
      为什么呢？
 
-     反证法，首先，一定存在$\lambda_j > 0$,因为不可能所有的$\lambda$都等于，否则w就为0，而w为0显然不是原始问题的最优解。
+     ~~反证法，首先，一定存在$\alpha_j > 0$,因为不可能所有的$\alpha$都等于，否则w就为0，而w为0显然不是原始问题的最优解。~~
 
-     当$\lambda_j^* > 0$时，有$1 - (y_j(w^{*T}x_j+b^*) + \xi_j^*)  = 0$，推出$y_j(w^{*T}x_j+b^*) = 1- \xi_j^*$, 
+     ~~当$\alpha_j^* > 0$时，有$1 - (y_j(w^{*T}x_j+b^*) + \xi_j^*)  = 0$，推出$y_j(w^{*T}x_j+b^*) = 1- \xi_j^*$,~~ 
 
-     然后怎么证明所有 $\lambda >0$的样本中，存在样本k使 $\lambda_k < C$, 还是反证法；
+     ~~然后怎么证明所有 $\alpha >0​$的样本中，存在样本k使 $\alpha_k < C​$, 还是反证法；~~
 
-     假设在所有 $\lambda>0$的样本中，所有的样本都有 $\lambda = C$, 即， 所有这些样本中$\mu = 0$, 则所有这些样本中$\xi > 0$, 即所有这些样本到$w^{*T}x+b=0$的函数间隔都小于1；实际上应该一定存在位于边缘的样本的，也就是，一定存在$\lambda < C$的样本j。
+     ~~假设在所有 $\alpha>0$的样本中，所有的样本都有 $\alpha = C$, 即， 所有这些样本中$\mu = 0$, 则所有这些样本中$\xi > 0$, 即所有这些样本到$w^{*T}x+b=0$的函数间隔都小于1；实际上应该一定存在位于边缘的样本的，也就是，一定存在$\alpha < C$的样本j。~~
 
-   可以看到满足该条件的j到分类平面的函数间隔为1，即$w^{*T}x_j + b^* = 1 * y_j$
+     以上理解不对，正确的理解是，这里$\alpha$其实是已知的，已经在SMO阶段求出来了，同时C也是已知的，从这些已知的变量里面挑一个满足该条件的$\alpha$用来计算来$b^*$而已。
+
+     在这篇博客（http://www.hankcs.com/ml/support-vector-machine.html）里有提到”若存在$\alpha_j^*, 0<\alpha_j^*<C$, 则$y_j(w^*x_j+b^*) -1 = 0$“，从这里的意思来看，好像这样的$\alpha$不一定存在；
+
+     ```
+     存在这样的$\alpha$意味着，这个alpha对应的样本位于wx+b=1 or -1的直线(平面)上，但是对应软间隔最大化的情况，可能是没有样本点刚好落在 wx+b=+1/-1 这个直线(平面)上的。也就是有可能做完smo发现，没有任何一个alpha满足它这里的 0<alpha<C
+     ```
+
+   可以看到满足该条件的j到分类平面的函数间隔为1，即$w^{*T}x_j + b^* = 1 * y_j​$
 
    实际上满足该条件的样本可能有多个，不同的j可能算出来的b可能略有不同，可以取均值，也可以任意选取一个j用来计算b。
 
    这里b的计算过程不再赘述，与线性可分SVM的结果一样：
    $$
-   b^*=y_j- (\sum_{i=1}^N\lambda_iy_ix_i)^Tx_j = y_j - \sum_{i=1}^N\lambda_i^*y_i(x_i \cdot x_j)
+   b^*=y_j- (\sum_{i=1}^N\alpha_iy_ix_i)^Tx_j = y_j - \sum_{i=1}^N\alpha_i^*y_i(x_i \cdot x_j)
    $$
+
+
+
 
 
 同样的， $w^*,b^*$,都有了， 那么我们的分离超平面也有了：
 $$
 w^{*T}x+b^* = 0， 即\\
-\sum_{i=1}^N\lambda_i^*y_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\lambda_i^*y_i(x_i \cdot x)\right) = 0
+\sum_{i=1}^N\alpha_i^*y_i(x_i\cdot x) + \left(y_j - \sum_{i=1}^N\alpha_i^*y_i(x_i \cdot x)\right) = 0
 $$
 还是一样，从上式可以看出，分类决策函数只依赖于输入x和训练样本输入的内积。
 
@@ -472,13 +483,57 @@ $$
 
 ### 核技巧
 
+#### 升维处理问题
+
+在我们的训练数据集不能被完美分类的情况下，我们视不同情况有两种解决方法：
+
+* 误分类点在分类超平面附近，且数量较少时，可用软间隔支持向量机；
+* 线性分类器无论怎么取，误分类点都很多时，可能我们的数据是非线性可分的。
+
+第二种情况的时候，我们有两种选择：
+
+* 构造非线性特征，如添加特征的高次项作为新的特征，在这些新特征上用线性分类器；
+* 提升维度将非线性分类转为线性分类。
+
+其实上面两种描述是一个意思，都是升维的方法转化为线性可分的情况。
+
+![162c94ea748c4243](./162c94ea748c4243.png)
+
+**定理：如果原始空间是有限维的，那么一定存在一个高维特征空间使得样本线性可分**
+
+例如，我们要将下面的数据分开：
+
+![162c96714d6bf2de](./162c96714d6bf2de.jpg)
+
+显然该数据是非线性可分的，肉眼看的话用一个圆可以将其分开：
+
+![162c9e9183c69658](./162c9e9183c69658.jpg)
+
+我们假定原数据特征为$x = (x_1, x_2)$，我们令$z=(x_1, x_2, x_1^2, x_2^2, x_1x_2)$这样便构造了一个从原始的2维空间映射到5维空间（效果如图），我们在新的5维空间上用线性分类器：$f(z) = \theta_0 + \theta_1z_1+\cdots + \theta_5z_5$,然后求最优的$\theta$. 
+
+![162d1917279762e4](./162d1917279762e4.gif)
+
+#### 核函数思想
+
+至此，我们理解到用升维可以解决一些非线性的问题，但是用升维的方法有一个严重的缺陷：维度灾难。
+
+升维会导致计算量增大。
+
+那么有什么办法可以既达到升维的效果，又不增加计算量呢？
+
+还真有，核函数。
+
+
+
+
+
 
 
 ## 问题
 
 1. 为什么无论主问题的凸性如何,对偶问题始终是凸优化问题?
 2. 强对偶性成立条件的证明
-3. $\underset{\lambda}{max} \underset{w,b}{min}L(w,b,\lambda) $严格来说应该是这样：$\underset{\lambda}{max} \underset{w,b}{inf}L(w,b,\lambda)$
+3. $\underset{\alpha}{max} \underset{w,b}{min}L(w,b,\alpha) $严格来说应该是这样：$\underset{\alpha}{max} \underset{w,b}{inf}L(w,b,\alpha)$
    至于为什么可以写成min不确定，猜测可能是强对偶问题所以等价？
 
 ## 参考
