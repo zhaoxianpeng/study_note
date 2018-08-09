@@ -417,6 +417,12 @@ $$
    \alpha_i \geq 0, \quad i=1,2,\cdots,N \\
    \mu_i \geq 0, \quad i=1,2,\cdots,N
    $$
+   仔细观察上式，$\mu可以用\alpha$表示出来的$\mu = C - \alpha$，同时把max改写成min，上式可以写为：
+   $$
+   \underset{\alpha}{max}\sum_{i=1}^N\alpha_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)  \\
+   s.t. \quad \sum_{i=1}^N\alpha_iy_i =0  \\
+   0 \leq \alpha \leq C, \quad i=1,2,\cdots,N \\
+   $$
    假设现在已经求得了该对偶问题的最优解$\alpha^*,\mu^*$(用SMO算法或是其他)，接下来就是要求$w^*,b^*$来确定分类平面，由拉格朗日定理（$x^*和\alpha^*,\mu^*$分别是主问题和对偶问题的解的充分必要条件是$x^*, \alpha^*,\mu^*$满足的KKT条件）：
    $$
    \triangledown_wL(w^*,b^*,\xi^*, \alpha^*,\mu^*) = w^* -\sum_{i=1}^N\alpha_i^*y_ix_i = 0 \\
@@ -433,7 +439,7 @@ $$
    $$
    w^* = \sum_{i=1}^N\alpha_i^*y_ix_i\\
    $$
-   接下来求$b^*$，选取合适的样本j（实际上就是支持向量和异常点），一定存在这样的样本j满足如下条件
+   接下来求$b^*​$，选取合适的样本j（实际上就是支持向量和异常点），一定存在这样的样本j满足如下条件
 
    * $0 \lt \alpha_j^* \lt C $
 
@@ -463,6 +469,7 @@ $$
    $$
    b^*=y_j- (\sum_{i=1}^N\alpha_iy_ix_i)^Tx_j = y_j - \sum_{i=1}^N\alpha_i^*y_i(x_i \cdot x_j)
    $$
+
 
 
 
@@ -523,11 +530,109 @@ $$
 
 还真有，核函数。
 
+首先回到之前线性SVM时的对偶问题中，软间隔的支持向量机的对偶问题是：
+$$
+\underset{\alpha}{max}\sum_{i=1}^N\alpha_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)  \\
+s.t. \quad \sum_{i=1}^N\alpha_iy_i =0  \\
+0 \leq \alpha \leq C, \quad i=1,2,\cdots,N \\
+$$
+这里面$\alpha$是待求项，y是分类标签，所以我们训练的核心数据是 $(x_i \cdot x_j)$。
 
+假设我们有一个d维空间的数据集$x=(x_1, x_2, \cdots, x_d)$，我们可以将其提升到这个维度:
+$$
+\begin{align}
+\Phi(x) = ( &1, x_1,x_2,\cdots,x_d, \\
+& x_1^2,x_1x_2, \cdots, x_1x_d, \\
+&x_2x_1, x_2^2, \cdots, x_2x_d \\
+& \cdots \\
+& x_dx_1, x_dx_2, \cdots, x_d^2\\
+)
+\end{align} \\
+$$
+那么对于对偶问题，我们就可以转换到高维空间去计算了，得到这个：
+$$
+\underset{\alpha}{max}\sum_{i=1}^N\alpha_i - \frac{1}{2} \sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_jy_iy_j(\Phi(x_i) \cdot \Phi( x_j))
+$$
+按照正常思路来的话，要先求出$\Phi(x_i) \cdot \Phi( x_j)$：
+$$
+\begin{align}
+\Phi(x_i) \cdot \Phi( x_j)  = & 1 + x_{i1}x_{j1} + x_{i2}x_{j2} + \cdots +  x_{id}x_{jd} \\
+				     & + x_{i1}^2x_{j1}^2 + x_{i1}x_{i2}x_{j1}x_{j2} + \cdots + x_{i1}x_{id}x_{j1}x_{jd} \\
+				     & + \cdots \\
+				     & + x_{id}x_{i1}x_{jd}x_{j1} + x{id}x_{i2}x_{jd}x_{j2} + \cdots + x_{id}^2x_{jd}^2 \\
+				      =& 1 + \sum_{k=1}^dx_{ik}x_{jk} \\
+				     & + x_{i1}x_{j1}(\sum_{k=1}^dx_{ik}x_{jk}) \\
+				     & \cdots \\
+				     & + x_{id}x_{jd}(\sum_{k=1}^dx_{ik}x_{jk}) \\
+				     = & 1 + \sum_{k=1}^dx_{ik}x_{jk} \\
+				     & +  \sum_{k=1}^dx_{ik}x_{jk}( \sum_{l=1}^dx_{lk}x_{lk})
+\end{align} \\
+$$
+在维度很大的情况下，要计算这个式子需要计算量是很大的，我们转换一下：
+$$
+我们知道：  \sum_{k=1}^dx_{ik}x_{jk}是每个对位元素相乘求和，其实就是 x_i \cdot x_j
+所以，上式可化为：\\
+\Phi(x_i) \cdot \Phi( x_j) = 1+x_i \cdot x_j + (x_i \cdot x_j)^2
+$$
+这表示$\Phi(x_i) \cdot \Phi(x_j)$可以由 $x_i \cdot x_j$表示出来，这个计算量就小了很多。核函数能大幅减少计算量，原理就在此。
 
+核函数不仅仅用在SVM上，但凡在一个模型后算法中出现了$(x_i \cdot x_j)$，我们都可以常使用$\kappa(x_i, x_j)$去替换，这可能能够很好地改善我们的算法。
 
+##### 核函数定义
 
+我们将$\kappa(x_i, x_j) =\Phi(x_i) \cdot \Phi( x_j)  $定义为核函数，其中$\Phi(x)$为映射函数。
 
+核技巧的思想是：在学习核预测中只使用$\kappa(x_i, x_j)$,而不必使用或显式计算$\Phi(x)$。
+
+### 将核函数思想应用到非线性SVM中
+
+我们接着计算得到w和b的最优值：
+$$
+w^* = \sum_{i=1}^N\alpha_i^*y_i \Phi(x_i)\\
+b^* = y_j - \sum_{i=1}^N\alpha_i^*y_i\kappa(x_i , x_j)
+$$
+同样可以得到分类决策函数为：
+$$
+\begin{align}
+f(x) & = sign(w^*\Phi(x)+b^*) \\
+       & = sign(\sum_{i=1}^N\alpha_i^*y_i\Phi(x_i) \cdot \Phi(x)  + b^*) \\
+       & = sign(\sum_{i=1}^N\alpha_i^*y_i\kappa(x_i,x) + b^*)
+\end{align}
+$$
+
+### 正定核
+
+那么问题来了，上面解释了非线性SVM的学习过程，那么，这个核函数怎么来的呢？
+
+答案是自己选的。
+
+我们知道$\kappa(x_i, x_j)$是由映射函数组成的内积，因此它是对称的：$\kappa(x_i, x_j) = \kappa(x_j,x_i) 对所有i，j都成立$；
+
+反过来说，对于一个函数$\kappa(x_i,x_j)$，如果Gram矩阵是半正定的[^1]，那么一定可以找到一个与之对应的映射$\Phi$。
+
+Gram矩阵如下所示：
+$$
+Gram K = 
+\begin{bmatrix} 
+\kappa(x_1 , x_1) & \kappa((x_1 , x_2) & \cdots, &\kappa((x_1 , x_k) \\
+\kappa((x_2 , x_1) & \kappa((x_2 , x_2) & \cdots, &\kappa( (x_2 , x_k) \\
+\vdots & \vdots & \vdots & \vdots \\
+\kappa((x_k , x_1) &\kappa( (x_k , x_2) & \cdots,& \kappa((x_k , x_k)
+\end{bmatrix}
+$$
+我们有如下定理：
+
+令$\chi$为输入空间，$\kappa(\cdot, \cdot)$为定义在 $\chi \times \chi$上的对称函数，则$\kappa$可以作为核函数的充分必要条件是K是半正定矩阵。
+
+看起来很完美，但是让我们自己造一个核函数是相当困难的，我们要论证Gram矩阵的半正定性，计算过程非常复杂。所幸，我们一般有几个成熟的核函数可以调用：
+
+![kernel method](./kernel method.png)
+
+同时，还可以组合这些核函数：
+
+* 若$\kappa_1和\kappa_2$为核函数，则对于任意正数$\gamma_1和\gamma_2$，线性组合$\gamma_1\kappa_1 + \gamma_2\kappa_2$也是核函数
+* 若$\kappa_1和\kappa_2$为核函数，他们的值积[^2]$\kappa_1 \bigotimes \kappa_2$也是核函数
+* 若$\kappa_1​$为核函数，则对于任意函数$g(x)​$， $\kappa(x_i, x_j) = g(x_i)\kappa_1(x_i, x_j)g(x_j)​$，也是核函数。
 
 ## 问题
 
@@ -548,14 +653,28 @@ $$
 8. https://www.cnblogs.com/ooon/p/5721119.html
 9. https://blog.csdn.net/xlmj23/article/details/78375248?locationNum=5&fps=1
 10. https://blog.csdn.net/lipengcn/article/details/52815429
+11. https://juejin.im/post/5ad1c5f75188255cb07d8c33
+12. https://blog.csdn.net/tMb8Z9Vdm66wH68VX1/article/details/79201666
+13. https://www.zhihu.com/question/24627666
 
 
 
+附录
 
+[^1]: Gram矩阵是什么？半正定又是什么？
 
+n维欧式空间中任意k（k<= n),个向量$\alpha_1, \alpha_2, \cdots, \alpha_k$的内积所组成的矩阵，称为k个向量$\alpha_1, \alpha_2, \cdots, \alpha_k$的gram矩阵：
+$$
+\begin{bmatrix} 
+(\alpha_1 \cdot \alpha_1) & (\alpha_1 \cdot \alpha_2) & \cdots &(\alpha_1 \cdot \alpha_k) \\
+(\alpha_2 \cdot \alpha_1) & (\alpha_2 \cdot \alpha_2) & \cdots & (\alpha_2 \cdot \alpha_k) \\
+\vdots & \vdots & \vdots & \vdots \\
+(\alpha_k \cdot \alpha_1) & (\alpha_k \cdot \alpha_2) & \cdots & (\alpha_k \cdot \alpha_k)
+\end{bmatrix}
+$$
+设A为实对称矩阵，若对于每个非零实向量*X*，都有X*'AX≥*0，则称A为**半**正定矩阵，称X'AX为半正定二次型。
 
-
-
+[^2]: 值积
 
 
 
