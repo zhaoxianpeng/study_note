@@ -94,9 +94,23 @@ L(\theta, Q) = \sum_{i=1}^Nlog\sum_{z^i}^{|z^i|}Q_i(z^i)\frac{P(y^i| z^i, \theta
 $$
  优化方法：
 
+#### 简化版
+
+通过迭代求解观测数据的对数似然函数$L(\theta) = logP(Y|\theta) $的极大化，每次迭代包含两步：
+
+1. E步，求期望，即求$logP(Y,Z|\theta)$关于$P(Z|Y,\theta^t)$的期望：
+
+   $Q(\theta, \theta^t)=\sum_ZlogP(Y,Z|\theta)P(Z|Y,\theta^t)$；
+
+   其中，$\theta^t$表示当前参数的估计值；
+
+2. M步，求极大，即极大化Q函数得到新的参数估计值：$\theta^{t+1}=arg\underset{\theta}{max}Q(\theta, \theta^t)$.
+
+#### 繁琐版
+
 1. 给定初始值 $\theta^0$
 
-2. E步(Expectation):固定$\theta^t$, 调整Q（Z），也就是选择一种隐含变量Z的分布使得对数似然函数的下界上升，其实看公式就知道调整Z的概率分布函数使得对数似然函数关于Z的期望最大！
+2. E步(Expectation):固定$\theta^t$, 调整Q（Z），也就是选择一种隐含变量Z的分布使得对数似然函数的下界上升，其实看公式就知道调整Z的概率分布函数使得对数似然函数关于Z的期望最大，
 
    Jensen不等式等号成立时，下界达到最大，而等号成立的条件是对于的函数是常数值，也就是
    $$
@@ -107,7 +121,7 @@ $$
     = \frac{P(y^i,z^i|\theta^t)}{P(y^i, | \theta^t)} = P(z^i|y^i, \theta^t)
    $$
 
-3. M步（Maximization):固定Q（Z），也就是固定隐含变量的概率分布，调整$\theta​$， 使得下界达到最大值；
+3. M步（Maximization):固定Q（Z），也就是固定隐含变量的概率分布，调整$\theta$， 使得对数似然函数对于当前隐含变量的分布的期望达到最大值；
    $$
    \theta^{t+1} = arg\underset{\theta}{max}\sum_{i=1}^N\sum_{z^i}^{|z^i|}Q_i^t(z^i)log\frac{P(y^i| z^i, \theta)P(z^i|\theta)}{Q_i^t(z^i)} \\
    =  arg\underset{\theta}{max}\sum_{i=1}^N\sum_{z^i}^{|z^i|}Q_i^t(z^i)logP(y^i, z^i| \theta) - \underbrace{\sum_{i=1}^N\sum_{z^i}^{|z^i|}Q_i^t(z^i)log{Q_i^t(z^i)}}_{常量} \\
