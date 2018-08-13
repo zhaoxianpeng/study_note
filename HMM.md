@@ -33,6 +33,7 @@
 
 
 
+
 ### 基本问题
 
 隐马尔科夫通常用来解决这3类问题：
@@ -155,18 +156,28 @@ $$
    Q(\lambda,\bar{\lambda}) = E_{Q \sim P(Q,Y|\bar{\lambda})}log\left(\pi_{q^1}b_{q^1y^1}a_{q^1q^2}b_{q^2y^2}\cdots  a_{q^{T-1}q^T}b_{q^Ty^T}\right) \\
    = E_{Q \sim P(Q,Y|\bar{\lambda})}log\pi_{q^1} + E_{Q \sim P(Q,Y|\bar{\lambda})}\left[ \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right] + E_{Q \sim P(Q,Y|\bar{\lambda})}\left[\sum_{t=1}^T log  b_{q^ty^t} \right]
    $$
+   展开Q函数成普通形式：
+   $$
+   Q(\lambda, \bar{\lambda}) = \sum_Q \left[log\pi_{q^1}\right]P(Q,Y|\bar{\lambda}) + \sum_Q \left[ \sum_{t=1}^{T-1}loga_{q^tq^{t+1}} \right]P(Q,Y|\bar{\lambda}) + \sum_Q\left[ \sum_{t=1}^T log  b_{q^ty^t}  \right]P(Q,Y|\bar{\lambda}) \\
+   $$
+   上式的$\sum_Q$是对所有可能的状态序列求和，而所有可能的状态序列有$N^T$那么多，计算量还是比较大的。
 
-3. M步：极大化Q函数，调整$\lambda​$使得Q函数最大；Q函数有3部分组成：
+   
+
+3. M步：极大化Q函数，调整$\lambda$使得Q函数最大；Q函数有3部分组成：
 
    * $E_{Q \sim P(Q,Y|\bar{\lambda})}log\pi_{q^1}$
      $$
-     E_{Q \sim P(Q,Y|\bar{\lambda})}log\pi_{q^1} = \sum_{q \in Q}log\pi_{q^1}P(Q,Y|\bar{\lambda})\\
-     上式中，函数部分只与q^1的概率分布有关，所以上式可以认为是遍历所有q^1的可能并求和，所有q^1可能的集合为S，得\\
+     E_{Q \sim P(Q,Y|\bar{\lambda})}log\pi_{q^1} = \sum_{Q}log\pi_{q^1}P(Q,Y|\bar{\lambda})\\
+     而P(q^1 = s_i) 等于固定q^1为s_i的情况所有q^2,\cdots,q^T状态序列的组合之和\\
+     上式中，函数部分只与q^1的概率分布有关，\\
+     所以上式可以认为是遍历所有q^1的可能并求和，\\
+     所有q^1可能的集合为S，长度为N，得\\
      = \sum_{i=1}^N log \pi_{q^1=s_i}P(Y, q^1 = s_i|\bar{\lambda}) \\
      又根据\pi的定义有 \pi_i=P(q^1 = s_i)，得\\
      = \sum_{i=1}^N log \pi_{i}P(Y, q^1 = s_i|\bar{\lambda})
      $$
-     而$\pi​$又要满足加和为1的约束，$\sum_{i=1}^N\pi_i = 1​$，利用拉格朗日乘子法，得到拉格朗日函数：
+     而$\pi$又要满足加和为1的约束，$\sum_{i=1}^N\pi_i = 1$，利用拉格朗日乘子法，得到拉格朗日函数：
      $$
      L(\pi, \alpha)=\sum_{i=1}^N log \pi_{i}P(Y, q^1 = s_i|\bar{\lambda}) + \alpha(\sum_{i=1}^N \pi_i -1)
      $$
@@ -186,11 +197,14 @@ $$
      $$
 
 
+
    * $E_{Q \sim P(Q,Y|\bar{\lambda})}\left[ \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right]​$
 
      第2项可写成
      $$
      E_{Q \sim P(Q,Y|\bar{\lambda})}\left[ \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right] = \sum_{q \in Q}\left[  \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right]P(Q,Y|\bar{\lambda}) \\
+     因为t时刻的状态只与t-1时刻的状态有关，与t-2和更前面后面的的状态无关，\\
+     这里函数所关心的只是相邻状态变量的组合概率情况\\
      = \sum_{i=1}^N \sum_{j=1}^N \sum_{t=1}^{T-1} \left[ log a_{q^{t+1} = s_j|q^t = s_i} P(Y, q^t=s_i, q^{t+1}=s_j| \bar{\lambda}) \right] \\
      其中 a_{ij}=P(q^{t+1}=s_j | q^t=s_i), 于是有 \\
      = \sum_{i=1}^N \sum_{j=1}^N \sum_{t=1}^{T-1} \left[ log a_{ij} P(Y, q^t=s_i, q^{t+1}=s_j| \bar{\lambda}) \right]
@@ -205,13 +219,15 @@ $$
      $$
      a_{ij}^* = 
      $$
-     
 
      
 
    * $E_{Q \sim P(Q,Y|\bar{\lambda})}\left[\sum_{t=1}^T log  b_{q^ty^t} \right]$
      $$
      E_{Q \sim P(Q,Y|\bar{\lambda})}\left[\sum_{t=1}^T log  b_{q^ty^t} \right] = \sum_{q \in Q}\left[\sum_{t=1}^T log  b_{q^ty^t} \right]P(Q,Y|\bar{\lambda}) \\
+     和1式类似，不必遍历所有的Q状态序列的组合，\\
+     固定q^t，其他所有q的组合加和就是P(q^t=s). \\
+     相当于把所有的状态序列组合分成了N份，然后这N份再求和就是所有的Q组合遍历求和\\
      =  \sum_{i=1}^N \left[ \sum_{t=1}^T log b_{y^t | q^t = s_i} P(Y, q^t = s_i| \bar{\lambda}) \right]
      $$
      同样有约束$\sum_{j=1}^Mb_{ij} = 1$,第i个状态发射到所有观察变量的概率和为1.构造拉格朗日函数：
@@ -222,9 +238,9 @@ $$
      $$
      b_{ij}^* = 
      $$
-     
 
      
+
 
 
 
