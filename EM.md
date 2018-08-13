@@ -121,7 +121,7 @@ $$
     = \frac{P(y^i,z^i|\theta^t)}{P(y^i, | \theta^t)} = P(z^i|y^i, \theta^t)
    $$
 
-3. M步（Maximization):固定Q（Z），也就是固定隐含变量的概率分布，调整$\theta$， 使得对数似然函数对于当前隐含变量的分布的期望达到最大值；
+3. M步（Maximization):固定Q（Z），也就是固定隐含变量的概率分布，调整$\theta$， 使得对数似然函数的下界对于当前隐含变量的分布的期望达到最大值；
    $$
    \theta^{t+1} = arg\underset{\theta}{max}\sum_{i=1}^N\sum_{z^i}^{|z^i|}Q_i^t(z^i)log\frac{P(y^i| z^i, \theta)P(z^i|\theta)}{Q_i^t(z^i)} \\
    =  arg\underset{\theta}{max}\sum_{i=1}^N\sum_{z^i}^{|z^i|}Q_i^t(z^i)logP(y^i, z^i| \theta) - \underbrace{\sum_{i=1}^N\sum_{z^i}^{|z^i|}Q_i^t(z^i)log{Q_i^t(z^i)}}_{常量} \\
@@ -161,5 +161,5 @@ $$
 
 
 
-[^1]: 只所以包含隐藏变量的情况无法直接用极大似然估计，是因为这时有两类未知变量，1）模型的参数；2）在模型参数的影响下隐藏变量Z。他们互相影响，所以可以用迭代的方式逼近它们：固定一个，调整另外一个。
+[^1]: 之所以包含隐藏变量的情况无法直接用极大似然估计，是因为这时有两类未知变量，1）模型的参数；2）在模型参数的影响下隐藏变量Z。他们互相影响，所以可以用迭代的方式逼近它们：固定一个，调整另外一个。
 

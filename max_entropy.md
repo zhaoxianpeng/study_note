@@ -1,4 +1,4 @@
-# Logistic Regress
+# 最大熵模型
 
 [TOC]
 

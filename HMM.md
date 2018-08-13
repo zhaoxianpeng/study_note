@@ -33,7 +33,6 @@
 
 
 
-
 ### 基本问题
 
 隐马尔科夫通常用来解决这3类问题：
@@ -195,6 +194,7 @@ $$
      => \alpha = - \sum_{i=1}^N P(Y, q^1=s_i|\bar{\lambda}) = -P(Y|\bar{\lambda}) \\
      => \pi_i^* = \frac{P(Y, q^1 = s_i|\bar{\lambda})}{P(Y|\bar{\lambda})}
      $$
+
 
 
 
