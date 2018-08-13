@@ -31,6 +31,8 @@
    $$
 
 
+
+
 ### 基本问题
 
 隐马尔科夫通常用来解决这3类问题：
@@ -124,7 +126,7 @@ $$
 
 这种情况，未知变量只有$\lambda$，因此可以直接用极大似然估计来估计模型参数。
 
-### 非监督学习
+### 非监督学习 Baum-Welch算法
 
 只知道观测序列Y，没有对应的状态序列Q，学习模型参数$\lambda$使得在该模型下观测到Y序列的概率$P(Y|\lambda)$最大。
 
@@ -134,15 +136,15 @@ $$
 
    观测数据为Y，隐藏数据为Q，完全数据为(Y,Q), 完全数据的对数似然函数是$logP(Y,Q|\lambda)$。
 
-2. E步：对对数似然函数$logP(Y,Q|\lambda)$求在隐变量分布$P(Q|Y,\lambda^t)$下的期望，在这里$\lambda^t$为已知变量
+2. E步：对对数似然函数$logP(Y,Q|\lambda)$求在隐变量分布$P(Q|Y,\bar{\lambda})$下的期望，在这里$\bar{\lambda}$为已知变量
    $$
-   Q(\lambda, \lambda^t) = \sum_QlogP(Y,Q|\lambda)P(Q|Y, \lambda^t) \quad \lambda^t为HMM参数的当前估计值 \\
-   = \sum_QlogP(Y,Q|\lambda)P(Q,Y| \lambda^t)/P(Y|\lambda^t) \\
+   Q(\lambda, \bar{\lambda}) = \sum_QlogP(Y,Q|\lambda)P(Q|Y, \bar{\lambda}) \quad \bar{\lambda}为HMM参数的当前估计值 \\
+   = \sum_QlogP(Y,Q|\lambda)P(Q,Y| \bar{\lambda})/P(Y|\bar{\lambda}) \\
    $$
-   由于$\lambda^t$为已知量，Y也是已知量，所以分母部分是常数，去掉常数项不影响优化结果: \
+   由于$\bar{\lambda}​$为已知量，Y也是已知量，所以分母部分是常数，去掉常数项不影响优化结果: \
    $$
-   Q(\lambda, \lambda^t) \propto \sum_QlogP(Y,Q|\lambda)P(Q,Y| \lambda^t) \\
-   = E_{Q \sim P(Q,Y|\lambda^t)}logP(Y,Q|\lambda)
+   Q(\lambda, \bar{\lambda}) \propto \sum_QlogP(Y,Q|\lambda)P(Q,Y| \bar{\lambda}) \\
+   = E_{Q \sim P(Q,Y|\bar{\lambda})}logP(Y,Q|\lambda)
    $$
    由公式4得：
    $$
@@ -150,12 +152,79 @@ $$
    $$
    于是期望函数可以写成：
    $$
-   Q(\lambda,\lambda^t) = E_{Q \sim P(Q,Y|\lambda^t)}log\left(\pi_{q^1}b_{q^1y^1}a_{q^1q^2}b_{q^2y^2}\cdots  a_{q^{T-1}q^T}b_{q^Ty^T}\right) \\
-   = E_{Q \sim P(Q,Y|\lambda^t)}log\pi_{q^1} + E_{Q \sim P(Q,Y|\lambda^t)}\left[ \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right] + E_{Q \sim P(Q,Y|\lambda^t)}\left[\sum_{t=1}^T log  b_{q^ty^t} \right]
+   Q(\lambda,\bar{\lambda}) = E_{Q \sim P(Q,Y|\bar{\lambda})}log\left(\pi_{q^1}b_{q^1y^1}a_{q^1q^2}b_{q^2y^2}\cdots  a_{q^{T-1}q^T}b_{q^Ty^T}\right) \\
+   = E_{Q \sim P(Q,Y|\bar{\lambda})}log\pi_{q^1} + E_{Q \sim P(Q,Y|\bar{\lambda})}\left[ \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right] + E_{Q \sim P(Q,Y|\bar{\lambda})}\left[\sum_{t=1}^T log  b_{q^ty^t} \right]
    $$
-   
 
-3. M步：极大化Q函数
+3. M步：极大化Q函数，调整$\lambda​$使得Q函数最大；Q函数有3部分组成：
+
+   * $E_{Q \sim P(Q,Y|\bar{\lambda})}log\pi_{q^1}$
+     $$
+     E_{Q \sim P(Q,Y|\bar{\lambda})}log\pi_{q^1} = \sum_{q \in Q}log\pi_{q^1}P(Q,Y|\bar{\lambda})\\
+     上式中，函数部分只与q^1的概率分布有关，所以上式可以认为是遍历所有q^1的可能并求和，所有q^1可能的集合为S，得\\
+     = \sum_{i=1}^N log \pi_{q^1=s_i}P(Y, q^1 = s_i|\bar{\lambda}) \\
+     又根据\pi的定义有 \pi_i=P(q^1 = s_i)，得\\
+     = \sum_{i=1}^N log \pi_{i}P(Y, q^1 = s_i|\bar{\lambda})
+     $$
+     而$\pi​$又要满足加和为1的约束，$\sum_{i=1}^N\pi_i = 1​$，利用拉格朗日乘子法，得到拉格朗日函数：
+     $$
+     L(\pi, \alpha)=\sum_{i=1}^N log \pi_{i}P(Y, q^1 = s_i|\bar{\lambda}) + \alpha(\sum_{i=1}^N \pi_i -1)
+     $$
+     求解上面拉格朗日函数，求偏导并令其等于0得：
+     $$
+     \frac{\part L(\pi, \alpha)}{\part \pi_i} = \frac{P(Y, q^1=s_i|\bar{\lambda})}{\pi_i} + \alpha = 0 \\
+     \pi_i^* = - \frac{P(Y, q^1=s_i|\bar{\lambda})}{\alpha}
+     $$
+
+     又有
+     $$
+     \frac{\part L(\pi, \alpha)}{\part \alpha} =  \sum_{i=1}^N \pi_i - 1 =0\\
+     把 \pi_i代入得
+     => - \frac{\sum_{i=1}^N P(Y, q^1=s_i|\bar{\lambda})}{\alpha} = 1 \\
+     => \alpha = - \sum_{i=1}^N P(Y, q^1=s_i|\bar{\lambda}) = -P(Y|\bar{\lambda}) \\
+     => \pi_i^* = \frac{P(Y, q^1 = s_i|\bar{\lambda})}{P(Y|\bar{\lambda})}
+     $$
+
+
+   * $E_{Q \sim P(Q,Y|\bar{\lambda})}\left[ \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right]​$
+
+     第2项可写成
+     $$
+     E_{Q \sim P(Q,Y|\bar{\lambda})}\left[ \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right] = \sum_{q \in Q}\left[  \sum_{t=1}^{T-1}loga_{q^tq^{t+1}}\right]P(Q,Y|\bar{\lambda}) \\
+     = \sum_{i=1}^N \sum_{j=1}^N \sum_{t=1}^{T-1} \left[ log a_{q^{t+1} = s_j|q^t = s_i} P(Y, q^t=s_i, q^{t+1}=s_j| \bar{\lambda}) \right] \\
+     其中 a_{ij}=P(q^{t+1}=s_j | q^t=s_i), 于是有 \\
+     = \sum_{i=1}^N \sum_{j=1}^N \sum_{t=1}^{T-1} \left[ log a_{ij} P(Y, q^t=s_i, q^{t+1}=s_j| \bar{\lambda}) \right]
+     $$
+     同时模型要求有$\sum_{j=1}^N a_{ij} = 1$,也就是所有下一个可能的状态的概率和为1.
+
+     同样构造拉格朗日函数：
+     $$
+     L(a, \alpha) =\sum_{i=1}^N \sum_{j=1}^N \sum_{t=1}^{T-1} \left[ log a_{ij} P(Y, q^t=s_i, q^{t+1}=s_j| \bar{\lambda}) \right] + \sum_{i=1}^N\alpha_i(\sum_{j=1}^Na_{ij} - 1)
+     $$
+     求上述拉格朗日函数得
+     $$
+     a_{ij}^* = 
+     $$
+     
+
+     
+
+   * $E_{Q \sim P(Q,Y|\bar{\lambda})}\left[\sum_{t=1}^T log  b_{q^ty^t} \right]$
+     $$
+     E_{Q \sim P(Q,Y|\bar{\lambda})}\left[\sum_{t=1}^T log  b_{q^ty^t} \right] = \sum_{q \in Q}\left[\sum_{t=1}^T log  b_{q^ty^t} \right]P(Q,Y|\bar{\lambda}) \\
+     =  \sum_{i=1}^N \left[ \sum_{t=1}^T log b_{y^t | q^t = s_i} P(Y, q^t = s_i| \bar{\lambda}) \right]
+     $$
+     同样有约束$\sum_{j=1}^Mb_{ij} = 1$,第i个状态发射到所有观察变量的概率和为1.构造拉格朗日函数：
+     $$
+     L(b, \alpha) =  \sum_{i=1}^N \left[ \sum_{t=1}^T log b_{y^t | q^t = s_i} P(Y, q^t = s_i| \bar{\lambda}) \right] + \sum_{i=1}^N \alpha_i(\sum_{j=1}^Mb_{ij})
+     $$
+     求拉格朗日函数
+     $$
+     b_{ij}^* = 
+     $$
+     
+
+     
 
 
 
