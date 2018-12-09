@@ -20,7 +20,7 @@ g(z) = \frac{1}{1+e^{-z}}
 $$
 该函数图像为:
 
-![转自维基百科](http://omw27y2pe.bkt.clouddn.com/image/sigmoid/Logistic-curve.png)
+![8176.sigmoidc.gif-550x0](./8176.sigmoidc.gif-550x0.png)
 
 sigmoid函数有如下性质
 
@@ -51,6 +51,7 @@ sigmoid函数有如下性质
   & = g(x)\cdot(1-g(x))
   \end{align}
   $$
+
 
 
 
@@ -157,6 +158,43 @@ $$
 l(\theta) =log L(\theta) = \sum_{i=1}^m[y^ilogh_\theta(x^i) + (1-y^i)log(1-h_\theta(x^i))]
 $$
 然后求$\theta$使$l(\theta)$的值最大,即为极大似然估计；具体求解方法可用梯度下降,拟牛顿法来求最优值.
+
+问：是否可以用类似最小二乘法的方法用矩阵求导的方法推出最优解的计算公式？
+
+试着在这里推一下：
+
+![20160620221336377](./20160620221336377.png)
+
+![20160620221607630](./20160620221607630.png)
+
+![20160719215500837](./20160719215500837.png)
+
+吴老师这里推得是损失函数的偏导，我前面推得是似然函数的偏导。所以他们符号相反。
+
+把对数似然函数写成向量的形式：
+$$
+l(\theta) = y^Tlogh_{\theta}(X) + (1-y)^Tlog(1 - h_{\theta}(X)) \\
+h_{\theta}(X) = g(X\theta) \\
+\frac{\part l}{\part{\theta}} = \frac{1}{m}X^T(h_{\theta}(x)-y)
+$$
+令导数为0求解$\theta$
+$$
+X^T(h_{\theta}(x)-y) = 0 \\
+X^Tg(X\theta) = X^Ty \\
+XX^T g(X\theta) = XX^Ty \\
+g(X\theta) = (XX^T)^{-1}XX^Ty \\
+\frac{1}{1+e^{-X\theta}} = (XX^T)^{-1}XX^Ty \\
+1 + e^{-X\theta} = \frac{1}{(XX^T)^{-1}XX^Ty} \\
+e^{-X\theta} = \frac{1}{(XX^T)^{-1}XX^Ty} - 1 \\
+-X\theta = log(\frac{1}{(XX^T)^{-1}XX^Ty} - 1) \\
+X\theta = -log(\frac{1}{(XX^T)^{-1}XX^Ty} - 1) \\
+\theta = -(X^TX)^{-1}X^Tlog(\frac{1}{(XX^T)^{-1}XX^Ty} - 1)
+$$
+这样对么？
+
+问：为什么$l(\theta)$为凸函数？
+
+
 
 
 ### 构造损失函数
