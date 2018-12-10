@@ -56,6 +56,7 @@ sigmoid函数有如下性质
 
 
 
+
 ### 伯努力分布
 
 那么,为什么sigmoid可以用到logistic回归问题上呢?
@@ -196,10 +197,27 @@ $$
 
 
 
+SVM ≈ L2-regularized logistic regression。![570455-20160518154150341-1904936924](570455-20160518154150341-1904936924.png)
 
-### 构造损失函数
 
 
+### ## kernel logistic regression
+
+能不能直接做kernel logistic regression？
+
+首先明白一点：**要想使用kernel trick，必然有：w可以由n个数据来表示。也即：optimal w can be represented by zn**。
+
+![for any L2-reg linear model](for any L2-reg linear model.png)
+
+![klr](klr.png)
+
+![klr_0](klr_0.png)
+
+
+
+软间隔SVM的用对数损失函数相当于Logistic Regress的L2 regularization?
+
+看起来是的。
 
 
 
