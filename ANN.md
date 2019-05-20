@@ -218,9 +218,7 @@ L(\hat{y}, y) =  \sum_{i=1}^3 loss(\hat{y}_{i}, y_{i}) \\
 $$
 第$l^{th}$层的误差向量记为$\delta^{(l)}$
 
-##### Layer 3
-
-###### 输出层贡献的误差
+##### Layer 3 输出层贡献的误差
 
 $$
 \frac{\part L}{\part z_1^{(3)}} = \frac{\part loss(\hat{y_1}, y_1)}{\part a_1^{(3)}} \cdot \frac{\part a_1^{(3)}}{\part z_1^{(3)}} \\
@@ -246,7 +244,7 @@ $$
 
 
 
-###### Layer 3的权重矩阵贡献的误差
+##### Layer 3的权重矩阵贡献的误差
 
 $w^{(3)}_{1,1}$对误差的贡献为：
 $$
@@ -266,8 +264,119 @@ $$
 
 不一一列出。写成矩阵形式：
 $$
-\frac{\part L}{\part W^{(3)}} = 
+\frac{\part L}{\part W^{(3)}} =\vec{a}^{(2)}\left(\frac{\part L}{\part \vec{z}^{(3)}}\right)^T \\
+= \vec{a}^{(2)}\left(\delta^{(3)}\right)^T
 $$
+
+##### Layer 2的输出误差
+
+$a_{1}^{(2)}$对误差的贡献为：
+$$
+\frac{\part L}{\part a_1^{(2)}} = 
+\frac{\part L}{\part z_1^{(3)}}\cdot\frac{\part z_1^{(3)}}{\part a_1^{(2)}} +
+\frac{\part L}{\part z_2^{(3)}}\cdot\frac{\part z_2^{(3)}}{\part a_1^{(2)}} +
+\frac{\part L}{\part z_3^{(3)}}\cdot\frac{\part z_3^{(3)}}{\part a_1^{(2)}} \\
+= \frac{\part L}{\part z_1^{(3)}}w_{1,1}^{(3)} + 
+\frac{\part L}{\part z_2^{(3)}}w_{1,2}^{(3)} +
+\frac{\part L}{\part z_3^{(3)}}w_{1,3}^{(3)}
+$$
+$z_1^{(2)}$对误差的贡献：
+$$
+\frac{\part L}{\part z_1^{(2)}} = \frac{\part L}{\part a_1^{(2)}} \cdot \frac{\part a_1^{(2)}}{\part z_1^{(2)}}
+$$
+$\vec{a}^{(2)}$对误差的贡献写成向量形式：
+$$
+\frac{\part L}{\part \vec{a}^{(2)}} = W^{(3)}\frac{\part L}{\part \vec{z}^{(3)}} = W^{(3)}\delta^{(3)}
+$$
+$\vec{z}^{(2)}$对误差的贡献写成向量形式：
+$$
+\frac{\part L}{\part \vec{z}^{(2)}}= \frac{\part L}{\part \vec{a}^{(2)}} \odot f'(\vec{z}^{(2)})
+$$
+由上面两个公式得：
+$$
+\delta^{(2)} = \frac{\part L}{\part \vec{a}^{(2)}} \odot f'(\vec{z}^{(2)}) \\
+= W^{(3)}\delta^{(3)} \odot f'(\vec{z}^{2})
+$$
+
+##### Layer 2的权重矩阵对误差的贡献
+
+$w_{1,1}^{(2)}$对误差的贡献
+$$
+\frac{\part L}{\part w_{1,1}^{(2)}} = \frac{\part L}{\part z_1^{(2)}} \cdot \frac{\part z_1^{(2)}}{\part w_{1,1}^{(2)}} \\
+= \frac{\part L}{\part z_1^{(2)}} \cdot a_1^{(1)}
+$$
+写成矩阵形式：
+$$
+\frac{\part L}{\part W^{(2)}} = \vec{a}^{(1)} \frac{\part L}{\part \vec{z}^{2}} \\
+ = \vec{a}^{(1)}\delta^{(2)}
+$$
+
+
+##### Layer 1的输出误差
+
+$a_{1}^{(1)}$对误差的贡献：
+$$
+\frac{\part L}{\part a_1^{(1)}} = 
+\frac{\part L}{\part z_1^{(2)}}\frac{\part z_1^{(2)}}{\part a_1^{(1)}} +
+\frac{\part L}{\part z_2^{(2)}}\frac{\part z_2^{(2)}}{\part a_1^{(1)}} +
+\frac{\part L}{\part z_3^{(2)}}\frac{\part z_3^{(2)}}{\part a_1^{(1)}} +
+\frac{\part L}{\part z_4^{(2)}}\frac{\part z_4^{(2)}}{\part a_1^{(1)}} \\
+= \frac{\part L}{\part z_1^{(2)}}\cdot w_{1,1}^{(2)} +
+\frac{\part L}{\part z_2^{(2)}}\cdot w_{1,2}^{(2)} +
+\frac{\part L}{\part z_3^{(2)}}\cdot w_{1,3}^{(2)} +
+\frac{\part L}{\part z_4^{(2)}}\cdot w_{1,4}^{(2)}
+$$
+$z_1^{(1)}$对误差的贡献为：
+$$
+\frac{\part L}{\part z_1^{(1)}} = \frac{\part L}{\part a_1^{(1)}} \cdot f'(z^{(1)}_1)
+$$
+写成向量形式：
+$$
+\frac{\part L}{\part \vec{a}^{(1)}} = W^{(2)}\frac{\part L}{\part \vec{z}^{2}} \\
+= W^{(2)}\delta^{(2)}
+$$
+
+$$
+\delta^{(1)} = \frac{\part L}{\part \vec{a}^{(1)}} \odot f'(\vec{z}^{(1)}) \\
+= W^{(2)}\delta^{(2)}\odot f'(\vec{z}^{1})
+$$
+
+
+
+##### Layer 1的权重矩阵对误差的贡献
+
+$w_{1,1}^{(1)}$对误差的贡献：
+$$
+\frac{\part L}{\part w_{1,1}^{(1)}} = \frac{\part L}{\part z_1^{(1)}}\cdot \frac{\part z_1^{(1)}}{\part w_{1,1}^{(1)}} = \frac{\part L}{\part z_1^{(1)}} \cdot x_1
+$$
+写成矩阵形式：
+$$
+\frac{\part L}{\part W^{(1)}} = \vec{x} \frac{\part L}{\part \vec{z}^{(2)}} = \vec{x} \delta^{(2)}
+$$
+
+
+#### 总结
+
+单样本情况，正向传播过程，从$l$层到$l+1$层的过程为：
+$$
+z^{(l+1)} = \left(w^{(l+1)}\right)^Ta^{(l)} \\
+a^{(l+1)} = f\left(z^{(l+1)}\right)
+$$
+反向传播过程，从$l+1$层神经元到$l$层神经元的过程为：
+$$
+\delta^{(l)} = W^{(l+1)}\delta^{(l+1)} \odot f'(\vec{z}^{(l)})
+$$
+从$l$层神经元到$l$层的权重矩阵的过程为：
+$$
+\frac{\part L}{\part W^{(l)}} = \vec{a}^{(l-1)}\delta^{(l)}
+$$
+
+
+
+
+
+
+
 
 
 
